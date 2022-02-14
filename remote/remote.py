@@ -1,5 +1,3 @@
-#pip install paramiko
-
 import paramiko
 
 def execute_command(host: str, port: int, username: str, password: str, command: str) -> str:
