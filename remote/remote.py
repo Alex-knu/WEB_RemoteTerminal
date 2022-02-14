@@ -1,6 +1,6 @@
 import paramiko
-import windows.py
-import linux.py
+import windows
+import linux
 
 def execute_remote_command(host: str, port: int, username: str, password: str, command: str) -> str:
     """
