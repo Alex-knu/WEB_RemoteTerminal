@@ -1,16 +1,16 @@
 import paramiko
-import windows
-import linux
+import WindowsStrategy
+import LinuxStrategy
 
 def execute_remote_command(host: str, port: int, username: str, password: str, command: str) -> str:
     """
-    Connects to the remote host and executes given command
+    Connects to the Remote host and executes given command
 
-    :param str host: hostname or IP address of the remote host
+    :param str host: hostname or IP address of the Remote host
     :param int port: SSH port number
-    :param str username: name of the user of the remote host
+    :param str username: name of the user of the Remote host
     :param str password: username password
-    :param str command: command will be executed on the remote host
+    :param str command: command will be executed on the Remote host
     :return: result of command execution
     :rtype: str
     """

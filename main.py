@@ -1,5 +1,5 @@
 from flask import Flask, request
-import remote.remote as rem
+import Remote.RemoteLogic as rem
 import WorkWithDB as wwdb
 
 app = Flask(__name__)
