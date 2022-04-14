@@ -4,6 +4,12 @@ import WorkWithDB as wwdb
 
 app = Flask(__name__)
 
+def pretty_output(response):
+    answ = ""
+    for elem in response:
+        answ += elem
+    return answ
+
 
 @app.route('/')
 def hello():
@@ -29,7 +35,7 @@ def Connect():
     #
     # result = rem.execute_remote_command(data.host, data.port, data.username, data.password, data.command)
 
-    return str(result)
+    return pretty_output(result)
 
 #
 if __name__ == '__main__':
