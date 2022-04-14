@@ -1,6 +1,6 @@
 import paramiko
-import WindowsStrategy
-import LinuxStrategy
+import WindowsStrategy as ws
+import LinuxStrategy as ls
 import platform
 
 
@@ -39,10 +39,10 @@ def check_os():
 
 def keygen(hostname):
     if check_os() == "Windows":
-        print(create_dir_windows(hostname))
-        return keygen_windows(hostname)
+        print(ws.create_dir_windows(hostname))
+        return ws.keygen_windows(hostname)
     elif check_os() == "Linux":
-        print(create_dir_linux(hostname))
-        return keygen_linux(hostname)
+        print(ls.create_dir_linux(hostname))
+        return ls.keygen_linux(hostname)
     else:
         raise Exception('Unknown operating system!')
