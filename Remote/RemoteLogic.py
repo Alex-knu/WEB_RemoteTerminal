@@ -1,6 +1,6 @@
 import paramiko
-import WindowsStrategy as ws
-import LinuxStrategy as ls
+import Remote.WindowsStrategy as ws
+import Remote.LinuxStrategy as ls
 import platform
 
 

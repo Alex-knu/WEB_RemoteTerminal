@@ -29,10 +29,10 @@ def Connect():
     #
     # result = rem.execute_remote_command(data.host, data.port, data.username, data.password, data.command)
 
-    return result
+    return str(result)
 
 #
-# if __name__ == '__main__':
-#     print_hi('PyCharm')
+if __name__ == '__main__':
+    app.run()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
