@@ -1,6 +1,8 @@
 import paramiko
 import WindowsStrategy
 import LinuxStrategy
+import platform
+
 
 def execute_remote_command(host: str, port: int, username: str, password: str, command: str) -> str:
     """
