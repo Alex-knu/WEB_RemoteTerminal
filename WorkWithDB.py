@@ -19,7 +19,9 @@ def GetHistory():
     return [list(i) for i in result]
 
 
-def GetUserMachine():
+def GetUserMachine(machinName, user, password):
+    # !!!Прилепить входящие данные функции в фильтрацию запроса!!!
+
     result = mycursor.execute("SELECT * FROM UserToMachine")
     return [list(i) for i in result]
 
