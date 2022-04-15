@@ -1,6 +1,6 @@
 from flask import Flask, request
 import Remote.RemoteLogic as rem
-import WorkWithDB as wwdb
+from WEB_RemoteTerminal.DataBase import WorkWithDB as wwdb
 
 app = Flask(__name__)
 
