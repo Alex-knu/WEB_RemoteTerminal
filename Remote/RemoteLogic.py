@@ -63,10 +63,14 @@ def check_os():
 
 def keygen(hostname):
     if check_os() == "Windows":
-        print(ws.create_dir_windows(hostname))
-        return ws.keygen_windows(hostname)
+        if not ws.check_if_dir_exist(hostname):
+            ws.create_dir_windows(hostname)
+            ws.keygen_windows(hostname)
+            return ws.keygen_windows(hostname)
     elif check_os() == "Linux":
-        print(ls.create_dir_linux(hostname))
-        return ls.keygen_linux(hostname)
+        if not ls.check_if_dir_exist(hostname):
+            ls.create_dir_linux(hostname)
+            ls.keygen_linux(hostname)
+            return ls.keygen_linux(hostname)
     else:
         raise Exception('Unknown operating system!')
