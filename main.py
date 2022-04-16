@@ -5,13 +5,6 @@ from WEB_RemoteTerminal.DataBase import WorkWithDB as wwdb
 app = Flask(__name__)
 
 
-def pretty_output(response):
-    answ = ""
-    for elem in response:
-        answ += elem
-    return answ
-
-
 @app.route('/')
 def hello():
     return 'Hello, World!'
@@ -37,7 +30,7 @@ def Connect():
     # wwdb.SaveHistory(data.machineGUID, command, datetime.datetime.now())
     # result = rem.execute_remote_command(data.host, data.port, data.username, data.password, data.command)
 
-    return pretty_output(result)
+    return result
 
 
 @app.route('/Ggthistory', methods=['GET'])
