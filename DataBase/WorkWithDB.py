@@ -109,5 +109,3 @@ def GetCommandToUser():
     # result = mycursor.execute("SELECT * FROM CommandToUser")
     # return [list(i) for i in result]
     return 1
-
-SaveUser('user4', 'p4', 'name4')
