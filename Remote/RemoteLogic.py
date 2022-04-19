@@ -44,6 +44,7 @@ def execute_remote_command(host: str, port: int, username: str, password: str, c
     answ = answ.replace("\\n", "\n")
     answ = answ.replace("\\t", "\t")
 
+    ssh.close()
     return answ
 
     # example of usage

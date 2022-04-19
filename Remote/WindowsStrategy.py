@@ -8,7 +8,6 @@ def keygen_windows(hostname):
 
 def check_if_dir_exist(hostname):
     if "True" in str(execute_windows_local(f'Test-Path -Path keys/{hostname}').stdout):
-        print("exist")
         return True
     else:
         return False
