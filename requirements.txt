@@ -1,6 +1,4 @@
 paramiko
-subprocess
-platform
 time
 re
 psycopg2-binary
