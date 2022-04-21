@@ -40,7 +40,7 @@ def add_ssh_key(hostname: str):
     execute_linux_local(f"eval `ssh-agent`")
     execute_linux_local(f"ssh-add -q keys/{hostname}/id_rsa")
 
-def add_trusted_host(hostname, username):
+def add_trusted_host(hostname: str, username: str):
     """
     Adds remote host to the local list of trusted hosts
 
