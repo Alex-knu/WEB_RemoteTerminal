@@ -60,16 +60,21 @@ def check_os():
         raise Exception('Unknown operating system!')
 
 
-def keygen(hostname):
+def first_connect(hostname: str) -> bool:
     if check_os() == "Windows":
-        if not ws.check_if_dir_exist(hostname):
-            ws.create_dir_windows(hostname)
-            ws.keygen_windows(hostname)
-            return ws.keygen_windows(hostname)
+        pass
     elif check_os() == "Linux":
-        if not ls.check_if_dir_exist(hostname):
-            ls.create_dir_linux(hostname)
-            ls.keygen_linux(hostname)
-            return ls.keygen_linux(hostname)
+        if ls.check_if_dir_exist(hostname):
+            return False
+        return True
+    else:
+        raise Exception('Unknown operating system!')
+
+def keygen(hostname: str, username: str, password: str):
+    if check_os() == "Windows":
+        pass
+    elif check_os() == "Linux":
+        ls.keygen_linux(hostname, username)
+        ls.ssh_copy_id(hostname, username, password)
     else:
         raise Exception('Unknown operating system!')
