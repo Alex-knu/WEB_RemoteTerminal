@@ -21,7 +21,7 @@ def Connect():
     command = request_data['command']
     root_password = request_data['rootPassword'] if 'rootPassword' in request_data else None
 
-    result = rem.execute_remote_command(host, port, username, password, command, root_password)
+    result = rem.execute_remote_command_pass(host, port, username, password, command, root_password)
 
     # Но по нормальному должно было быть так
     # data = wwdb.GetUserMachine(request_data['machinName'], request_data['user'], request_data['password'])
