@@ -1,6 +1,7 @@
 from flask import Flask, request
 import Remote.RemoteLogic as rem
 from DataBase import WorkWithDB as wwdb
+import datetime
 
 app = Flask(__name__)
 
@@ -20,6 +21,8 @@ def Connect():
     password = request_data['password']
     command = request_data['command']
     root_password = request_data['rootPassword'] if 'rootPassword' in request_data else None
+
+    wwdb.SaveHistory('96799c6d-2bcc-4826-b8ef-50f1d502b662', command, datetime.datetime.now())
 
     result = rem.execute_remote_command_pass(host, port, username, password, command, root_password)
 
@@ -81,7 +84,7 @@ def UpdateUser():
     wwdb.UpdateUser(guid, login, name, password)
 
 
-@app.route('/updatevachine', methods=['POST'])
+@app.route('/updatemachine', methods=['POST'])
 def UpdateMachine():
     request_data = request.get_json()
 
