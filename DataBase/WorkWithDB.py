@@ -7,6 +7,7 @@ from Models.HistoryToMachine import HistoryToMachine
 config = configparser.ConfigParser()
 config.read("../Files/settings.ini")
 
+
 def GetConnection():
     connection = psycopg2.connect(
         host=config['DataBase']['host'],
@@ -17,6 +18,7 @@ def GetConnection():
     connection.autocommit = True
     return connection
 
+
 def SaveUser(login, password, name):
     connection = GetConnection()
     newGUID = uuid.uuid4()
@@ -24,6 +26,7 @@ def SaveUser(login, password, name):
         cursor.execute(f"""INSERT INTO "Users" ("Guid", "Login", "Password", "Name") 
         VALUES ('{newGUID}', '{login}', '{password}', '{name}')""")
     connection.close()
+
 
 def SaveMachine(userGUID, machineName, host, username, password, port):
     connection = GetConnection()
@@ -34,6 +37,7 @@ def SaveMachine(userGUID, machineName, host, username, password, port):
         ('{newGUID}', '{userGUID}', '{machineName}', '{host}', '{username}', '{password}', '{port}')""")
     connection.close()
 
+
 def SaveHistory(machineGUID, command, time):
     connection = GetConnection()
     newGUID = uuid.uuid4()
@@ -42,19 +46,40 @@ def SaveHistory(machineGUID, command, time):
         VALUES ('{newGUID}', '{machineGUID}', '{command}', '{time}')""")
     connection.close()
 
+
 def UpdateUser(guid, login, password, name):
     connection = GetConnection()
+    query = """UPDATE "Users" SET"""
+    if login is not None:
+        query = query + f""" "Login" = '{login}'"""
+    if password is not None:
+        query = query + f""" "Password" = '{password}'"""
+    if name is not None:
+        query = query + f""" "Name" = '{name}'"""
+
+    query = query + f""" WHERE "Guid" = '{guid}'"""
+    query = query.replace("""' \"""", """', \"""")
     with connection.cursor() as cursor:
-        cursor.execute(f"""UPDATE "Users" SET "Login" = '{login}', 
-        "Password" = '{password}', "Name" = '{name}' WHERE "Guid" = '{guid}'""")
+        cursor.execute(query)
     connection.close()
+
 
 def UpdateMachine(guid, host, port, password):
     connection = GetConnection()
+    query = """UPDATE "Users" SET"""
+    if host is not None:
+        query = query + f""" "Host" = '{host}'"""
+    if password is not None:
+        query = query + f"""" "Password" = '{password}'"""
+    if port is not None:
+        query = query + f"""" "Port" = '{port}'"""
+
+    query = query + f"""" WHERE "Guid" = '{guid}'"""
+    query = query.replace("""' \"""", """', \"""")
     with connection.cursor() as cursor:
-        cursor.execute(f"""UPDATE "UserToMachine" SET "Host" = '{host}', 
-        "Port" = '{port}', "Password" = '{password}' WHERE "Guid" = '{guid}'""")
+        cursor.execute(query)
     connection.close()
+
 
 def DeleteUser(guid):
     connection = GetConnection()
@@ -62,11 +87,13 @@ def DeleteUser(guid):
         cursor.execute(f"""DELETE FROM "Users" WHERE "Guid" = '{guid}'""")
     connection.close()
 
+
 def DeleteMachine(guid):
     connection = GetConnection()
     with connection.cursor() as cursor:
         cursor.execute(f"""DELETE FROM "UserToMachine" WHERE "Guid" = '{guid}'""")
     connection.close()
+
 
 def GetUserMachine(machineName, user, password):
     connection = GetConnection()
@@ -76,16 +103,17 @@ def GetUserMachine(machineName, user, password):
         AND "Password" = '{password}'""")
         response = cursor.fetchone()
     result = UserToMachine(
-        guid = response[0],
-        userGUID = response[1],
-        machineName = response[2],
-        host = response[3],
-        user = response[4],
-        password = response[5],
-        port = response[6]
+        guid=response[0],
+        userGUID=response[1],
+        machineName=response[2],
+        host=response[3],
+        user=response[4],
+        password=response[5],
+        port=response[6]
     )
     connection.close()
     return result
+
 
 def GetHistory(userGUID):
     connection = GetConnection()
@@ -96,14 +124,15 @@ def GetHistory(userGUID):
         response = cursor.fetchall()
     result = [
         HistoryToMachine(
-            guid = row[0],
-            machineGUID = row[1],
-            command = row[2],
-            time = row[3]
+            guid=row[0],
+            machineGUID=row[1],
+            command=row[2],
+            time=row[3]
         ) for row in response
     ]
     connection.close()
     return result
+
 
 def GetCommandToUser():
     # result = mycursor.execute("SELECT * FROM CommandToUser")

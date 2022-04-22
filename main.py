@@ -76,10 +76,10 @@ def SaveUser():
 def UpdateUser():
     request_data = request.get_json()
 
-    guid = request_data['guid']
-    login = request_data['login']
-    name = request_data['name']
-    password = request_data['password']
+    guid = request_data['userGUID']
+    login = request_data['login'] if 'login' in request_data else None
+    name = request_data['name'] if 'name' in request_data else None
+    password = request_data['password'] if 'password' in request_data else None
 
     wwdb.UpdateUser(guid, login, name, password)
 
@@ -88,10 +88,10 @@ def UpdateUser():
 def UpdateMachine():
     request_data = request.get_json()
 
-    guid = request_data['guid']
-    host = request_data['host']
-    port = request_data['port']
-    password = request_data['password']
+    guid = request_data['machineGUID']
+    host = request_data['host'] if 'host' in request_data else None
+    port = request_data['port'] if 'port' in request_data else None
+    password = request_data['password'] if 'password' in request_data else None
 
     wwdb.UpdateMachine(guid, host, port, password)
 
