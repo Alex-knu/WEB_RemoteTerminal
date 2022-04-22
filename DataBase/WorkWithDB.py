@@ -6,11 +6,11 @@ from Models.UserToMachine import UserToMachine
 from Models.HistoryToMachine import HistoryToMachine
 
 config = configparser.ConfigParser()
-config.read("../Files/settings.ini")
+config.read("Files/settings.ini")
 
 
 def GetConnection():
-    if config['DataBase']['type'] == 'PostgresSQL':
+    if config['DataBase']['type'] == 'PostgreSQL':
         connection = psycopg2.connect(
             host=config['DataBase']['host'],
             user=config['DataBase']['user'],
