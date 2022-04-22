@@ -5,6 +5,7 @@ import platform
 import time
 import re
 
+
 def execute_command_ssh(session: paramiko.client.SSHClient, command: str, root_password: str) -> str:
     """
     Executes command in the given SSH session and processes the result
@@ -38,7 +39,9 @@ def execute_command_ssh(session: paramiko.client.SSHClient, command: str, root_p
 
     return answ
 
-def execute_remote_command_pass(hostname: str, port: int, username: str, password: str, command: str, root_password: str):
+
+def execute_remote_command_pass(hostname: str, port: int, username: str, password: str, command: str,
+                                root_password: str):
     """
     Creates SSH session via password authentication and executes command in it
 
@@ -59,6 +62,7 @@ def execute_remote_command_pass(hostname: str, port: int, username: str, passwor
     ssh.close()
     return answ
 
+
 def execute_remote_command_key(hostname: str, username: str, command: str, root_password: str) -> str:
     """
     Creates SSH session via SSH keys authentication and executes command in it
@@ -73,13 +77,14 @@ def execute_remote_command_key(hostname: str, username: str, command: str, root_
     session = paramiko.SSHClient()
     session.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     key_file = paramiko.RSAKey.from_private_key_file(f"keys/{hostname}/id_rsa")
-    session.connect(hostname=hostname,username=username, pkey=key_file)
+    session.connect(hostname=hostname, username=username, pkey=key_file)
 
     answ = execute_command_ssh(session=session, command=command, root_password=root_password)
 
     session.close()
 
     return answ
+
 
 def check_os() -> str:
     """
@@ -95,6 +100,7 @@ def check_os() -> str:
     else:
         raise Exception('Unknown operating system!')
 
+
 def first_connect(hostname: str) -> bool:
     """
     Checks if it's first connect to the remote host
@@ -104,15 +110,12 @@ def first_connect(hostname: str) -> bool:
     :rtype: bool
     """
     if check_os() == "Windows":
-        if ws.check_if_dir_exist(hostname):
-            return False
-        return True
+        return not (ws.check_if_dir_exist(hostname))
     elif check_os() == "Linux":
-        if ls.check_if_dir_exist(hostname):
-            return False
-        return True
+        return not (ls.check_if_dir_exist(hostname))
     else:
         raise Exception('Unknown operating system!')
+
 
 def keygen(hostname: str, username: str, password: str):
     """
@@ -131,6 +134,6 @@ def keygen(hostname: str, username: str, password: str):
     else:
         raise Exception('Unknown operating system!')
 
-#if first_connect(hostname):
+# if first_connect(hostname):
 #    keygen(hostname, username, password)
-#print(execute_remote_command_key(hostname, username,command,None))
+# print(execute_remote_command_key(hostname, username,command,None))
