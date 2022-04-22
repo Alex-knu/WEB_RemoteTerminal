@@ -1,5 +1,6 @@
 import configparser
 import psycopg2
+import mysql.connector
 import uuid
 from Models.UserToMachine import UserToMachine
 from Models.HistoryToMachine import HistoryToMachine
@@ -9,13 +10,22 @@ config.read("../Files/settings.ini")
 
 
 def GetConnection():
-    connection = psycopg2.connect(
-        host=config['DataBase']['host'],
-        user=config['DataBase']['user'],
-        password=config['DataBase']['password'],
-        database=config['DataBase']['database']
-    )
-    connection.autocommit = True
+    if config['DataBase']['type'] == 'PostgresSQL':
+        connection = psycopg2.connect(
+            host=config['DataBase']['host'],
+            user=config['DataBase']['user'],
+            password=config['DataBase']['password'],
+            database=config['DataBase']['database']
+        )
+        connection.autocommit = True
+    elif config['DataBase']['type'] == 'MySQL':
+        connection = mysql.connector.connect(
+            host=config["DataBase"]["host"],
+            user=config["DataBase"]["user"],
+            password=config["DataBase"]["password"],
+            database=config["DataBase"]["database"]
+        )
+
     return connection
 
 
