@@ -1,12 +1,12 @@
 import subprocess
 
-def execute_linux_local(command: str):
+def execute_linux_local(command: str) -> subprocess.CompletedProcess:
     """
     Executes given Linux command on the current (local) machine
 
     :param str command: command to be executed on the current machine
     :return: result of command execution
-    :rtype: class 'subprocess.CompletedProcess'
+    :rtype: subprocess.CompletedProcess
     """
     return subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
