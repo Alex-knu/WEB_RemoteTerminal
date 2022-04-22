@@ -133,7 +133,3 @@ def keygen(hostname: str, username: str, password: str):
         ls.ssh_copy_id(hostname, username, password)
     else:
         raise Exception('Unknown operating system!')
-
-# if first_connect(hostname):
-#    keygen(hostname, username, password)
-# print(execute_remote_command_key(hostname, username,command,None))

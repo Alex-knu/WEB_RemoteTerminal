@@ -15,16 +15,25 @@ def hello():
 def Connect():
     request_data = request.get_json()
 
-    host = request_data['host']
+    use_ssh_key = request_data["UseSSHKey"] if 'UseSSHKey' in request_data else None
+    hostname = request_data['host']
     port = request_data['port']
     username = request_data['username']
-    password = request_data['password']
+    password = request_data['password'] if 'password' in request_data else None
     command = request_data['command']
     root_password = request_data['rootPassword'] if 'rootPassword' in request_data else None
 
-    wwdb.SaveHistory('96799c6d-2bcc-4826-b8ef-50f1d502b662', command, datetime.datetime.now())
+    if (use_ssh_key is False or use_ssh_key is None) and password is not None:
+        result = rem.execute_remote_command_pass(hostname, port, username, password, command, root_password)
+    else:
+        if rem.first_connect(hostname) and password is None:
+            raise Exception("It is impossible to establish SSH connect via keys without password for the first time")
+        else:
+            if rem.first_connect(hostname):
+                rem.keygen(hostname, username, password)
+            result = rem.execute_remote_command_key(hostname, username, command, root_password)
 
-    result = rem.execute_remote_command_pass(host, port, username, password, command, root_password)
+    wwdb.SaveHistory('96799c6d-2bcc-4826-b8ef-50f1d502b662', command, datetime.datetime.now())
 
     # Но по нормальному должно было быть так
     # data = wwdb.GetUserMachine(request_data['machinName'], request_data['user'], request_data['password'])
@@ -35,7 +44,6 @@ def Connect():
     # result = rem.execute_remote_command(data.host, data.port, data.username, data.password, data.command)
 
     return result
-
 
 @app.route('/gethistory', methods=['GET'])
 def GetHistory():
