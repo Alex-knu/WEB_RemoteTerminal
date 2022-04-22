@@ -1,5 +1,7 @@
 ### Launch instructions
 
+Before running the program perform the following:
+
 On Linux:
 
 - install `sshpass` utility
