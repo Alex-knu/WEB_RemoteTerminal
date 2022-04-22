@@ -26,12 +26,13 @@ def Connect():
     if (use_ssh_key is False or use_ssh_key is None) and password is not None:
         result = rem.execute_remote_command_pass(hostname, port, username, password, command, root_password)
     else:
-        if rem.first_connect(hostname) and password is None:
-            raise Exception("It is impossible to establish SSH connect via keys without password for the first time")
-        else:
-            if rem.first_connect(hostname):
-                rem.keygen(hostname, username, password)
-            result = rem.execute_remote_command_key(hostname, username, command, root_password)
+        if rem.first_connect(hostname):
+            if password is None:
+                raise Exception("It is impossible to establish SSH connect via keys without password for the first time")
+
+            rem.keygen(hostname, username, password)
+
+        result = rem.execute_remote_command_key(hostname, username, command, root_password)
 
     wwdb.SaveHistory('96799c6d-2bcc-4826-b8ef-50f1d502b662', command, datetime.datetime.now())
 
