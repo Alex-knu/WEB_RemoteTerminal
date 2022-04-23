@@ -1,4 +1,4 @@
-CREATE DATABASE RemoteTerminal;
+CREATE DATABASE "RemoteTerminal";
 
 CREATE TABLE "HistoryToMachine" (
     "Guid" uuid NOT NULL,

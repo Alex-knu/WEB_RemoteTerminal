@@ -2,8 +2,8 @@ import configparser
 import psycopg2
 import mysql.connector
 import uuid
-from Models.UserToMachine import UserToMachine
-from Models.HistoryToMachine import HistoryToMachine
+from .Models.UserToMachine import UserToMachine
+from .Models.HistoryToMachine import HistoryToMachine
 
 config = configparser.ConfigParser()
 config.read("Files/settings.ini")
@@ -130,7 +130,7 @@ def GetHistory(userGUID):
     with connection.cursor() as cursor:
         cursor.execute(f"""SELECT "h"."Guid", "h"."MachineGUID", "h"."Command", "h"."Time"
         FROM "UserToMachine" u JOIN "HistoryToMachine" h ON "u"."Guid" = "h"."MachineGUID"
-        WHERE "u"."Guid" = '{userGUID}'""")
+        WHERE "u"."UserGUID" = '{userGUID}'""")
         response = cursor.fetchall()
     result = [
         HistoryToMachine(
