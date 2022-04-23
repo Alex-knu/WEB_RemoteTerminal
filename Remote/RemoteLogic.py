@@ -6,24 +6,17 @@ import time
 import re
 
 
-def execute_remote_command(host: str, port: int, username: str, password: str, command: str, root_password: str):
+def execute_command_ssh(session: paramiko.client.SSHClient, command: str, root_password: str) -> str:
     """
-    Connects to the Remote host and executes given command
+    Executes command in the given SSH session and processes the result
 
-    :param str sudoPassword: root password
-    :param str host: hostname or IP address of the Remote host
-    :param int port: SSH port number
-    :param str username: name of the user of the Remote host
-    :param str password: username password
-    :param str command: command will be executed on the Remote host
-    :return: result of command execution
+    :param paramiko.client.SSHClient session: session that the command will be executed in
+    :param str command: command to be executed
+    :param str root_password: password of the root user of the remote host
+    :return: result of the given command
     :rtype: str
     """
-
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(host, port, username, password)
-    channel = ssh.get_transport().open_session()
+    channel = session.get_transport().open_session()
     channel.get_pty()
     channel.exec_command(command)
 
@@ -46,11 +39,60 @@ def execute_remote_command(host: str, port: int, username: str, password: str, c
 
     return answ
 
-    # example of usage
-    # print(execute_remote_command(host="192.168.1.45", port=22, username="user1", password="password12345", command="hostnamectl"))
+
+def execute_remote_command_pass(hostname: str, port: int, username: str, password: str, command: str,
+                                root_password: str):
+    """
+    Creates SSH session via password authentication and executes command in it
+
+    :param str hostname: hostname of the remote host
+    :param int port: SSH port number
+    :param str username: username of the remote host
+    :param str password: password of the user of the remote host
+    :param str command: command to be executed on the remote host
+    :param str root_password: password of the root user of the remote host
+    :return: result of command execution
+    :rtype: str
+    """
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname, port, username, password)
+
+    answ = execute_command_ssh(session=ssh, command=command, root_password=root_password)
+    ssh.close()
+    return answ
 
 
-def check_os():
+def execute_remote_command_key(hostname: str, username: str, command: str, root_password: str) -> str:
+    """
+    Creates SSH session via SSH keys authentication and executes command in it
+
+    :param str hostname: hostname of the remote host
+    :param str username: username of the remote host
+    :param str command: command to be executed on the remote host
+    :param str root_password: password of the root user of the remote host
+    :return: result of command execution
+    :rtype: str
+    """
+    session = paramiko.SSHClient()
+    session.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    key_file = paramiko.RSAKey.from_private_key_file(f"keys/{hostname}/id_rsa")
+    session.connect(hostname=hostname, username=username, pkey=key_file)
+
+    answ = execute_command_ssh(session=session, command=command, root_password=root_password)
+
+    session.close()
+
+    return answ
+
+
+def check_os() -> str:
+    """
+    Checks the OS type of the local machine
+
+    :return: OS type of the host
+    :rtype: str
+    """
     if platform.system() == "Windows":
         return "Windows"
     elif platform.system() == "Linux":
@@ -59,16 +101,35 @@ def check_os():
         raise Exception('Unknown operating system!')
 
 
-def keygen(hostname):
+def first_connect(hostname: str) -> bool:
+    """
+    Checks if it's first connect to the remote host
+
+    :param str hostname: hostname of the remote host
+    :return: True if it's first connect and False otherwise
+    :rtype: bool
+    """
     if check_os() == "Windows":
-        if not ws.check_if_dir_exist(hostname):
-            ws.create_dir_windows(hostname)
-            ws.keygen_windows(hostname)
-            return ws.keygen_windows(hostname)
+        return not (ws.check_if_dir_exist(hostname))
     elif check_os() == "Linux":
-        if not ls.check_if_dir_exist(hostname):
-            ls.create_dir_linux(hostname)
-            ls.keygen_linux(hostname)
-            return ls.keygen_linux(hostname)
+        return not (ls.check_if_dir_exist(hostname))
+    else:
+        raise Exception('Unknown operating system!')
+
+
+def keygen(hostname: str, username: str, password: str):
+    """
+    Generates SSH key pair and prepares it to the usage depending on the local OS type
+
+    :param str hostname: hostname of the remote host
+    :param str username: username of the remote host
+    :param str password: password of the user of the remote host
+    """
+    if check_os() == "Windows":
+        ws.keygen_windows(hostname)
+        ws.ssh_copy_id(hostname, username, password)
+    elif check_os() == "Linux":
+        ls.keygen_linux(hostname, username)
+        ls.ssh_copy_id(hostname, username, password)
     else:
         raise Exception('Unknown operating system!')
