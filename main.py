@@ -105,5 +105,22 @@ def UpdateMachine():
     wwdb.UpdateMachine(guid, host, port, password)
 
 
+@app.route('/deleteuser', methods=['POST'])
+def DeleteUser():
+    request_data = request.get_json()
+
+    guid = request_data['userGUID']
+
+    wwdb.DeleteUser(guid)
+
+
+@app.route('/deletemachine', methods=['POST'])
+def DeleteMachine():
+    request_data = request.get_json()
+
+    guid = request_data['machineGUID']
+
+    wwdb.DeleteMachine(guid)
+
 if __name__ == '__main__':
     app.run()
