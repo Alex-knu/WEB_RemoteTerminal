@@ -125,7 +125,7 @@ def SaveUser():
 
     login = request_data['login']
     name = request_data['name']
-    password = hesh.heshing(request_data['password'])
+    password = request_data['password']
 
     wwdb.SaveUser(login, name, password)
 
@@ -142,7 +142,7 @@ def UpdateUser():
     guid = request_data['userGUID']
     login = request_data['login'] if 'login' in request_data else None
     name = request_data['name'] if 'name' in request_data else None
-    password = hesh.heshing(request_data['password']) if 'password' in request_data else None
+    password = request_data['password'] if 'password' in request_data else None
 
     wwdb.UpdateUser(guid, login, name, password)
 

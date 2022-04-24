@@ -5,6 +5,7 @@ import uuid
 from .Models.Users import Users
 from .Models.UserToMachine import UserToMachine
 from .Models.HistoryToMachine import HistoryToMachine
+import Security.Hesh as hesh
 
 config = configparser.ConfigParser()
 config.read("Files/settings.ini")
@@ -33,9 +34,10 @@ def GetConnection():
 def SaveUser(login, password, name):
     connection = GetConnection()
     newGUID = uuid.uuid4()
+    hash_password = hesh.heshing(password)
     with connection.cursor() as cursor:
         cursor.execute(f"""INSERT INTO "Users" ("Guid", "Login", "Password", "Name") 
-        VALUES ('{newGUID}', '{login}', '{password}', '{name}')""")
+        VALUES ('{newGUID}', '{login}', '{hash_password}', '{name}')""")
     connection.close()
 
 
@@ -60,11 +62,12 @@ def SaveHistory(machineGUID, command, time):
 
 def UpdateUser(guid, login, password, name):
     connection = GetConnection()
+    hash_password = hesh.heshing(password)
     query = """UPDATE "Users" SET"""
     if login is not None:
         query = query + f""" "Login" = '{login}'"""
     if password is not None:
-        query = query + f""" "Password" = '{password}'"""
+        query = query + f""" "Password" = '{hash_password}'"""
     if name is not None:
         query = query + f""" "Name" = '{name}'"""
 
