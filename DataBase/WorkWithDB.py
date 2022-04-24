@@ -2,6 +2,7 @@ import configparser
 import psycopg2
 import mysql.connector
 import uuid
+from .Models.Users import Users
 from .Models.UserToMachine import UserToMachine
 from .Models.HistoryToMachine import HistoryToMachine
 
@@ -112,6 +113,7 @@ def GetUserMachine(machineName, user, password):
         WHERE "MachineName" = '{machineName}' AND "User" = '{user}'
         AND "Password" = '{password}'""")
         response = cursor.fetchone()
+
     result = UserToMachine(
         guid=response[0],
         userGUID=response[1],
@@ -124,6 +126,20 @@ def GetUserMachine(machineName, user, password):
     connection.close()
     return result
 
+
+def GetUser(login):
+    connection = GetConnection()
+    with connection.cursor() as cursor:
+        cursor.execute(f"""SELECT * FROM "Users" WHERE "Login" = '{login}'""")
+        response = cursor.fetchone()
+
+    result = Users(
+        login=response[1],
+        password=response[2],
+        name=response[3]
+    )
+    connection.close()
+    return result
 
 def GetHistory(userGUID):
     connection = GetConnection()
