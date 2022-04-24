@@ -2,13 +2,13 @@ import json
 
 def authorization(username, password, db_usernames, db_passwords):
     status = False 
-    if username in db_usernames:
-        if password is not None:
-            if password in db_passwords:
+    if username == db_usernames:
+        if password:
+            if password == db_passwords:
                 status = True
-                messages = "Verified"
+                messages = "Authorized."
             else:
-                messages = "Access denied. Wrong password"
+                messages = "Access denied. Wrong password."
         else:
             messages = "Password can't be empty."
     else:

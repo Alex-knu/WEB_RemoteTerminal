@@ -18,7 +18,26 @@ def my403(text):
 def hello():
     return 'Hello, World!'
 
+@app.route('/authorization', methods=['POST'])
+def Auth():
+    request_data = request.authorization
+    if request_data.type is not 'basic':
+        return my403('There is not basic auth type')
+    if request_data.username is None:
+        return my403('There is no username in the request')
+    if request_data.password is None:
+        return my403('There is no password in the request')
 
+    login = request_data.username
+    password = hesh.heshing(request_data.password)
+    result = wwdb.GetUser(login) 
+    db_login = result.login
+    db_password = result.password
+
+    auth_status, auth_message = auth.authorization(login, password, db_login, db_password)
+       
+    return auth_message
+    
 @app.route('/connect', methods=['POST'])
 def Connect():
     request_data = request.get_json()
@@ -40,12 +59,7 @@ def Connect():
     command = request_data['command']
     root_password = request_data['rootPassword'] if 'rootPassword' in request_data else None
 
-    result = wwdb.GetUser(username)
-    db_username = result.login
-    db_password = result.password
-
-    auth_status, auth_message = auth.authorization(username, password, db_username, db_password)
-
+    auth_status = True #will add variable from auth, now just dummy
     if auth_status:
 
         if (use_ssh_key is False or use_ssh_key is None) and password is not None: 
@@ -61,7 +75,7 @@ def Connect():
 
         wwdb.SaveHistory('96799c6d-2bcc-4826-b8ef-50f1d502b662', command, datetime.datetime.now())
     else:
-        return auth_message
+        return my403('User unauthorized.')
 
     # Но по нормальному должно было быть так
     # data = wwdb.GetUserMachine(request_data['machinName'], request_data['user'], request_data['password'])
