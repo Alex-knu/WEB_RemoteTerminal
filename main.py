@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 import Remote.RemoteLogic as rem
 from DataBase import WorkWithDB as wwdb
 import datetime
+import Security.SingIn as auth
+import Security.Hesh as hesh
 
 app = Flask(__name__)
 
@@ -34,22 +36,32 @@ def Connect():
     hostname = request_data['host']
     port = request_data['port']
     username = request_data['username']
-    password = request_data['password'] if 'password' in request_data else None
+    password = hesh.heshing(request_data['password']) if 'password' in request_data else None
     command = request_data['command']
     root_password = request_data['rootPassword'] if 'rootPassword' in request_data else None
 
-    if (use_ssh_key is False or use_ssh_key is None) and password is not None:
-        result = rem.execute_remote_command_pass(hostname, port, username, password, command, root_password)
+    result = wwdb.GetUser(username)
+    db_username = result.login
+    db_password = result.password
+
+    auth_status, auth_message = auth.authorization(username, password, db_username, db_password)
+
+    if auth_status:
+
+        if (use_ssh_key is False or use_ssh_key is None) and password is not None: 
+            result = rem.execute_remote_command_pass(hostname, port, username, password, command, root_password)
+        else:
+            if rem.first_connect(hostname):
+                if password is None:
+                    return my403('It is impossible to establish SSH connect via keys without password for the first time')
+
+                rem.keygen(hostname, username, password)
+
+            result = rem.execute_remote_command_key(hostname, username, command, root_password)
+
+        wwdb.SaveHistory('96799c6d-2bcc-4826-b8ef-50f1d502b662', command, datetime.datetime.now())
     else:
-        if rem.first_connect(hostname):
-            if password is None:
-                return my403('It is impossible to establish SSH connect via keys without password for the first time')
-
-            rem.keygen(hostname, username, password)
-
-        result = rem.execute_remote_command_key(hostname, username, command, root_password)
-
-    wwdb.SaveHistory('96799c6d-2bcc-4826-b8ef-50f1d502b662', command, datetime.datetime.now())
+        return auth_message
 
     # Но по нормальному должно было быть так
     # data = wwdb.GetUserMachine(request_data['machinName'], request_data['user'], request_data['password'])
@@ -113,7 +125,7 @@ def SaveUser():
 
     login = request_data['login']
     name = request_data['name']
-    password = request_data['password']
+    password = hesh.heshing(request_data['password'])
 
     wwdb.SaveUser(login, name, password)
 
@@ -130,7 +142,7 @@ def UpdateUser():
     guid = request_data['userGUID']
     login = request_data['login'] if 'login' in request_data else None
     name = request_data['name'] if 'name' in request_data else None
-    password = request_data['password'] if 'password' in request_data else None
+    password = hesh.heshing(request_data['password']) if 'password' in request_data else None
 
     wwdb.UpdateUser(guid, login, name, password)
 
