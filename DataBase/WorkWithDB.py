@@ -43,11 +43,12 @@ def SaveUser(login, password, name):
 
 def SaveMachine(userGUID, machineName, host, username, password, port):
     connection = GetConnection()
+    hash_password = hesh.heshing(password)
     newGUID = uuid.uuid4()
     with connection.cursor() as cursor:
         cursor.execute(f"""INSERT INTO "UserToMachine" 
         ("Guid", "UserGUID", "MachineName", "Host", "User", "Password", "Port") VALUES 
-        ('{newGUID}', '{userGUID}', '{machineName}', '{host}', '{username}', '{password}', '{port}')""")
+        ('{newGUID}', '{userGUID}', '{machineName}', '{host}', '{username}', '{hash_password}', '{port}')""")
     connection.close()
 
 
@@ -80,11 +81,12 @@ def UpdateUser(guid, login, password, name):
 
 def UpdateMachine(guid, host, port, password):
     connection = GetConnection()
+    hash_password = hesh.heshing(password)
     query = """UPDATE "Users" SET"""
     if host is not None:
         query = query + f""" "Host" = '{host}'"""
     if password is not None:
-        query = query + f"""" "Password" = '{password}'"""
+        query = query + f"""" "Password" = '{hash_password}'"""
     if port is not None:
         query = query + f"""" "Port" = '{port}'"""
 
