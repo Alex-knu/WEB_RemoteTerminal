@@ -5,12 +5,24 @@ import datetime
 import Security.SingIn as auth
 import Security.Hesh as hesh
 
-app = Flask(__name__)
+from flask_login import LoginManager, login_required, login_user
 
+
+app = Flask(__name__)
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(login):
+    return wwdb.Users.GetUser(login) #loads user from DB
 
 def my403(text):
     respons = jsonify({'error': text})
     respons.status_code = 403
+    return respons
+def my401(text):
+    respons = jsonify({'error': text})
+    respons.status_code = 401
     return respons
 
 
@@ -22,7 +34,7 @@ def hello():
 def Auth():
     request_data = request.authorization
     if request_data.type is not 'basic':
-        return my403('There is not basic auth type')
+        return my401('There is not basic auth type') #Flask.abort(401)
     if request_data.username is None:
         return my403('There is no username in the request')
     if request_data.password is None:
@@ -30,15 +42,21 @@ def Auth():
 
     login = request_data.username
     password = hesh.heshing(request_data.password)
-    result = wwdb.GetUser(login) 
-    db_login = result.login
-    db_password = result.password
+    user = wwdb.GetUser(login)
+
+    if user is None:
+        return my401('User not found.')
+
+    db_login = user.login
+    db_password = user.password
 
     auth_status, auth_message = auth.authorization(login, password, db_login, db_password)
-       
+    if auth_status:
+        login_user(user) #require an instance of the User class
     return auth_message
     
 @app.route('/connect', methods=['POST'])
+#@login_required
 def Connect():
     request_data = request.get_json()
 
@@ -59,23 +77,15 @@ def Connect():
     command = request_data['command']
     root_password = request_data['rootPassword'] if 'rootPassword' in request_data else None
 
-    auth_status = True #will add variable from auth, now just dummy
-    if auth_status:
-
-        if (use_ssh_key is False or use_ssh_key is None) and password is not None: 
-            result = rem.execute_remote_command_pass(hostname, port, username, password, command, root_password)
-        else:
-            if rem.first_connect(hostname):
-                if password is None:
-                    return my403('It is impossible to establish SSH connect via keys without password for the first time')
-
-                rem.keygen(hostname, username, password)
-
-            result = rem.execute_remote_command_key(hostname, username, command, root_password)
-
-        wwdb.SaveHistory('96799c6d-2bcc-4826-b8ef-50f1d502b662', command, datetime.datetime.now())
+    if (use_ssh_key is False or use_ssh_key is None) and password is not None: 
+        result = rem.execute_remote_command_pass(hostname, port, username, password, command, root_password)
     else:
-        return my403('User unauthorized.')
+        if rem.first_connect(hostname):
+            if password is None:
+                return my403('It is impossible to establish SSH connect via keys without password for the first time')
+            rem.keygen(hostname, username, password)
+        result = rem.execute_remote_command_key(hostname, username, command, root_password)
+    wwdb.SaveHistory('96799c6d-2bcc-4826-b8ef-50f1d502b662', command, datetime.datetime.now())
 
     # Но по нормальному должно было быть так
     # data = wwdb.GetUserMachine(request_data['machinName'], request_data['user'], request_data['password'])
@@ -89,6 +99,7 @@ def Connect():
 
 
 @app.route('/gethistory', methods=['GET'])
+#@login_required
 def GetHistory():
     request_data = request.get_json()
 
@@ -103,6 +114,7 @@ def GetHistory():
 
 
 @app.route('/savemachine', methods=['POST'])
+#@login_required
 def SaveMachine():
     request_data = request.get_json()
 
@@ -127,6 +139,7 @@ def SaveMachine():
 
 
 @app.route('/saveuser', methods=['POST'])
+#@login_required
 def SaveUser():
     request_data = request.get_json()
 
@@ -145,6 +158,7 @@ def SaveUser():
 
 
 @app.route('/updateuser', methods=['POST'])
+#@login_required
 def UpdateUser():
     request_data = request.get_json()
 
@@ -162,6 +176,7 @@ def UpdateUser():
 
 
 @app.route('/updatemachine', methods=['POST'])
+#@login_required
 def UpdateMachine():
     request_data = request.get_json()
 
@@ -179,6 +194,7 @@ def UpdateMachine():
 
 
 @app.route('/deleteuser', methods=['POST'])
+#@login_required
 def DeleteUser():
     request_data = request.get_json()
 
@@ -191,6 +207,7 @@ def DeleteUser():
 
 
 @app.route('/deletemachine', methods=['POST'])
+#@login_required
 def DeleteMachine():
     request_data = request.get_json()
 
