@@ -119,6 +119,9 @@ def GetUserMachine(machineName, user, password):
         AND "Password" = '{password}'""")
         response = cursor.fetchone()
 
+    if response is None:
+        return None
+
     result = UserToMachine(
         guid=response[0],
         userGUID=response[1],
@@ -138,7 +141,11 @@ def GetUser(login):
         cursor.execute(f"""SELECT * FROM "Users" WHERE "Login" = '{login}'""")
         response = cursor.fetchone()
 
+    if response is None:
+        return None
+
     result = Users(
+        guid=response[0],
         login=response[1],
         password=response[2],
         name=response[3]
@@ -153,6 +160,10 @@ def GetHistory(userGUID):
         FROM "UserToMachine" u JOIN "HistoryToMachine" h ON "u"."Guid" = "h"."MachineGUID"
         WHERE "u"."UserGUID" = '{userGUID}'""")
         response = cursor.fetchall()
+
+    if response is None:
+        return None
+
     result = [
         HistoryToMachine(
             guid=row[0],
