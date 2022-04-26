@@ -67,7 +67,7 @@ def UpdateUser(guid, login, password, name):
     if login is not None:
         query = query + f""" "Login" = '{login}'"""
     if password is not None:
-        hash_password_str = hesh.heshing(password)
+        hash_password_str = hesh.heshing(password).decode('UTF-8')
         query = query + f""" "Password" = '{hash_password_str}'"""
     if name is not None:
         query = query + f""" "Name" = '{name}'"""
