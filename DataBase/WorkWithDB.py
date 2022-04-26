@@ -1,10 +1,10 @@
 import configparser
+import json
 import psycopg2
 import mysql.connector
 import uuid
 from .Models.Users import Users
 from .Models.UserToMachine import UserToMachine
-from .Models.HistoryToMachine import HistoryToMachine
 import Security.Hesh as hesh
 
 config = configparser.ConfigParser()
@@ -34,21 +34,21 @@ def GetConnection():
 def SaveUser(login, password, name):
     connection = GetConnection()
     newGUID = uuid.uuid4()
-    hash_password = hesh.heshing(password)
+    hash_password_str = hesh.heshing(password).decode('UTF-8')
     with connection.cursor() as cursor:
         cursor.execute(f"""INSERT INTO "Users" ("Guid", "Login", "Password", "Name") 
-        VALUES ('{newGUID}', '{login}', '{hash_password}', '{name}')""")
+        VALUES ('{newGUID}', '{login}', '{hash_password_str}', '{name}')""")
     connection.close()
 
 
 def SaveMachine(userGUID, machineName, host, username, password, port):
     connection = GetConnection()
-    hash_password = hesh.heshing(password)
+    hash_password_str = hesh.heshing(password).decode('UTF-8')
     newGUID = uuid.uuid4()
     with connection.cursor() as cursor:
         cursor.execute(f"""INSERT INTO "UserToMachine" 
         ("Guid", "UserGUID", "MachineName", "Host", "User", "Password", "Port") VALUES 
-        ('{newGUID}', '{userGUID}', '{machineName}', '{host}', '{username}', '{hash_password}', '{port}')""")
+        ('{newGUID}', '{userGUID}', '{machineName}', '{host}', '{username}', '{hash_password_str}', '{port}')""")
     connection.close()
 
 
@@ -63,12 +63,12 @@ def SaveHistory(machineGUID, command, time):
 
 def UpdateUser(guid, login, password, name):
     connection = GetConnection()
-    hash_password = hesh.heshing(password)
     query = """UPDATE "Users" SET"""
     if login is not None:
         query = query + f""" "Login" = '{login}'"""
     if password is not None:
-        query = query + f""" "Password" = '{hash_password}'"""
+        hash_password_str = hesh.heshing(password)
+        query = query + f""" "Password" = '{hash_password_str}'"""
     if name is not None:
         query = query + f""" "Name" = '{name}'"""
 
@@ -81,16 +81,16 @@ def UpdateUser(guid, login, password, name):
 
 def UpdateMachine(guid, host, port, password):
     connection = GetConnection()
-    hash_password = hesh.heshing(password)
-    query = """UPDATE "Users" SET"""
+    query = """UPDATE "UserToMachine" SET"""
     if host is not None:
         query = query + f""" "Host" = '{host}'"""
     if password is not None:
-        query = query + f"""" "Password" = '{hash_password}'"""
+        hash_password_str = hesh.heshing(password).decode('UTF-8')
+        query = query + f""" "Password" = '{hash_password_str}'"""
     if port is not None:
-        query = query + f"""" "Port" = '{port}'"""
+        query = query + f""" "Port" = '{port}'"""
 
-    query = query + f"""" WHERE "Guid" = '{guid}'"""
+    query = query + f""" WHERE "Guid" = '{guid}'"""
     query = query.replace("""' \"""", """', \"""")
     with connection.cursor() as cursor:
         cursor.execute(query)
@@ -164,14 +164,13 @@ def GetHistory(userGUID):
     if response is None:
         return None
 
-    result = [
-        HistoryToMachine(
-            guid=row[0],
-            machineGUID=row[1],
-            command=row[2],
-            time=row[3]
-        ) for row in response
-    ]
+    result = json.dumps([
+        {'guid': row[0],
+         'machineGUID': row[1],
+         'command': row[2],
+         'time': str(row[3])}
+        for row in response])
+
     connection.close()
     return result
 

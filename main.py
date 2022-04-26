@@ -4,7 +4,6 @@ from DataBase import WorkWithDB as wwdb
 import datetime
 import Security.SingIn as auth
 import Security.Hesh as hesh
-
 from flask_login import LoginManager, login_required, login_user
 
 
@@ -110,7 +109,7 @@ def GetHistory():
 
     result = wwdb.GetHistory(userGUID)
 
-    return str(result)
+    return result
 
 
 @app.route('/savemachine', methods=['POST'])
@@ -120,22 +119,26 @@ def SaveMachine():
 
     if 'userGUID' not in request_data:
         return my403('There is no userGUID in the request')
+    if 'machinename' not in request_data:
+        return my403('There is no machinename in the request')
     if 'host' not in request_data:
         return my403('There is no host in the request')
+    if 'user' not in request_data:
+        return my403('There is no user in the request')
+    if 'password' not in request_data:
+        return my403('There is no command in the request')
     if 'port' not in request_data:
         return my403('There is no port in the request')
-    if 'username' not in request_data:
-        return my403('There is no username in the request')
-    if 'command' not in request_data:
-        return my403('There is no command in the request')
 
     userGUID = request_data['userGUID']
+    machinename = request_data['machinename']
     host = request_data['host']
-    port = request_data['port']
-    username = request_data['username']
+    user = request_data['user']
     password = request_data['password']
+    port = request_data['port']
 
-    wwdb.SaveMachine(userGUID, host, port, username, password)
+    wwdb.SaveMachine(userGUID, machinename, host, user, password, port)
+    return 'New machine successfully added!'
 
 
 @app.route('/saveuser', methods=['POST'])
@@ -145,16 +148,17 @@ def SaveUser():
 
     if 'login' not in request_data:
         return my403('There is no login in the request')
-    if 'name' not in request_data:
-        return my403('There is no name in the request')
     if 'password' not in request_data:
         return my403('There is no password in the request')
+    if 'name' not in request_data:
+        return my403('There is no name in the request')
 
     login = request_data['login']
-    name = request_data['name']
     password = request_data['password']
+    name = request_data['name']
 
-    wwdb.SaveUser(login, name, password)
+    wwdb.SaveUser(login, password, name)
+    return 'New user successfully added!'
 
 
 @app.route('/updateuser', methods=['POST'])
@@ -169,10 +173,11 @@ def UpdateUser():
 
     guid = request_data['userGUID']
     login = request_data['login'] if 'login' in request_data else None
-    name = request_data['name'] if 'name' in request_data else None
     password = request_data['password'] if 'password' in request_data else None
+    name = request_data['name'] if 'name' in request_data else None
 
-    wwdb.UpdateUser(guid, login, name, password)
+    wwdb.UpdateUser(guid, login, password, name)
+    return 'User successfully updated!'
 
 
 @app.route('/updatemachine', methods=['POST'])
@@ -191,7 +196,7 @@ def UpdateMachine():
     password = request_data['password'] if 'password' in request_data else None
 
     wwdb.UpdateMachine(guid, host, port, password)
-
+    return 'Machine successfully updated!'
 
 @app.route('/deleteuser', methods=['POST'])
 #@login_required
@@ -204,7 +209,7 @@ def DeleteUser():
     guid = request_data['userGUID']
 
     wwdb.DeleteUser(guid)
-
+    return 'User successfully deleted!'
 
 @app.route('/deletemachine', methods=['POST'])
 #@login_required
@@ -217,7 +222,7 @@ def DeleteMachine():
     guid = request_data['machineGUID']
 
     wwdb.DeleteMachine(guid)
-
+    return 'Machine successfully deleted!'
 
 if __name__ == '__main__':
     app.run()
