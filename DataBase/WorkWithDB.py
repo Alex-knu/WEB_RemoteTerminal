@@ -3,9 +3,11 @@ import json
 import psycopg2
 import mysql.connector
 import uuid
-from .Models.Users import Users
-from .Models.UserToMachine import UserToMachine
-import Security.Hesh as hesh
+
+from WEB_RemoteTerminal.DataBase.Models.Users import Users
+from WEB_RemoteTerminal.DataBase.Models.UserToMachine import UserToMachine
+from WEB_RemoteTerminal.Security import Hesh as hesh
+
 
 config = configparser.ConfigParser()
 config.read("Files/settings.ini")

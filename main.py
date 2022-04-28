@@ -1,12 +1,14 @@
-from flask import Flask, request, jsonify, session
-import Remote.RemoteLogic as rem
-from DataBase import WorkWithDB as wwdb
-import datetime
-import Security.SingIn as auth
-import Security.Hesh as hesh
-from flask_login import LoginManager
-from flask_login import login_required, login_user, logout_user
 import configparser
+import datetime
+
+from flask import Flask, request, jsonify, session
+from flask_login import LoginManager
+from flask_login import login_required, login_user
+
+import WEB_RemoteTerminal.Remote.RemoteLogic as rem
+import WEB_RemoteTerminal.Security.Hesh as hesh
+import WEB_RemoteTerminal.Security.SingIn as auth
+from WEB_RemoteTerminal.DataBase import WorkWithDB as wwdb
 
 app = Flask(__name__)
 login_manager = LoginManager()
