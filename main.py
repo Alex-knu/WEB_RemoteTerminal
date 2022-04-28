@@ -1,19 +1,28 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 import Remote.RemoteLogic as rem
 from DataBase import WorkWithDB as wwdb
 import datetime
 import Security.SingIn as auth
 import Security.Hesh as hesh
-from flask_login import LoginManager, login_required, login_user
-
+from flask_login import LoginManager
+from flask_login import login_required, login_user, logout_user
+import configparser
 
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+config = configparser.ConfigParser()
+config.read("Files/settings.ini")
+
+
+app.config['SESSION_TYPE'] = config['AppConfig']['SESSION_TYPE']
+app.config['SECRET_KEY'] = config['AppConfig']['SECRET_KEY']
+
+
 @login_manager.user_loader
 def load_user(login):
-    return wwdb.Users.GetUser(login) #loads user from DB
+    return wwdb.GetUser(login)
 
 def my403(text):
     respons = jsonify({'error': text})
@@ -29,19 +38,21 @@ def my401(text):
 def hello():
     return 'Hello, World!'
 
-@app.route('/authorization', methods=['POST'])
+
+@app.route('/login', methods=['POST'])
 def Auth():
     request_data = request.authorization
     if request_data.type is not 'basic':
-        return my401('There is not basic auth type') #Flask.abort(401)
+        return my401('There is not basic auth type.')
     if request_data.username is None:
-        return my403('There is no username in the request')
+        return my403('There is no username in the request.')
     if request_data.password is None:
-        return my403('There is no password in the request')
+        return my403('There is no password in the request.')
 
     login = request_data.username
     password = hesh.heshing(request_data.password)
     user = wwdb.GetUser(login)
+    session[user.login] = user.login
 
     if user is None:
         return my401('User not found.')
@@ -51,11 +62,39 @@ def Auth():
 
     auth_status, auth_message = auth.authorization(login, password, db_login, db_password)
     if auth_status:
-        login_user(user) #require an instance of the User class
+        login_user(user)
     return auth_message
     
+
+@app.route('/getsession', methods=['POST'])
+@login_required
+def getsession():
+    request_data = request.get_json()
+    if 'username' not in request_data:
+        return my403('There is no username in the request.')
+
+    login = request_data['username']
+    if login in session:
+        return f"User {login} is loged in."
+    else:
+        return f"User {login} is not loged in for now."
+
+
+@app.route("/logout", methods=['POST'])
+@login_required
+def logout():
+    request_data = request.get_json()
+    if 'username' not in request_data:
+        return my403('There is no username in the request.')
+
+    login = request_data['username']
+
+    session.pop(login,None)
+    return f'User {login} was loged out.'
+
+
 @app.route('/connect', methods=['POST'])
-#@login_required
+@login_required
 def Connect():
     request_data = request.get_json()
 
@@ -98,7 +137,7 @@ def Connect():
 
 
 @app.route('/gethistory', methods=['GET'])
-#@login_required
+@login_required
 def GetHistory():
     request_data = request.get_json()
 
@@ -113,7 +152,7 @@ def GetHistory():
 
 
 @app.route('/savemachine', methods=['POST'])
-#@login_required
+@login_required
 def SaveMachine():
     request_data = request.get_json()
 
@@ -162,7 +201,7 @@ def SaveUser():
 
 
 @app.route('/updateuser', methods=['POST'])
-#@login_required
+@login_required
 def UpdateUser():
     request_data = request.get_json()
 
@@ -181,7 +220,7 @@ def UpdateUser():
 
 
 @app.route('/updatemachine', methods=['POST'])
-#@login_required
+@login_required
 def UpdateMachine():
     request_data = request.get_json()
 
@@ -198,8 +237,9 @@ def UpdateMachine():
     wwdb.UpdateMachine(guid, host, port, password)
     return 'Machine successfully updated!'
 
+
 @app.route('/deleteuser', methods=['POST'])
-#@login_required
+@login_required
 def DeleteUser():
     request_data = request.get_json()
 
@@ -211,8 +251,9 @@ def DeleteUser():
     wwdb.DeleteUser(guid)
     return 'User successfully deleted!'
 
+
 @app.route('/deletemachine', methods=['POST'])
-#@login_required
+@login_required
 def DeleteMachine():
     request_data = request.get_json()
 
@@ -223,6 +264,12 @@ def DeleteMachine():
 
     wwdb.DeleteMachine(guid)
     return 'Machine successfully deleted!'
+
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return 'User not authorized. Please, login or register your account.'
+
 
 if __name__ == '__main__':
     app.run()

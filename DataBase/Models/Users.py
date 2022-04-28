@@ -6,3 +6,5 @@ class Users(UserMixin):
         self.login = login
         self.password = password
         self.name = name
+    def get_id(self):
+           return (self.login)

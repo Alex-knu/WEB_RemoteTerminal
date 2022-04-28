@@ -4,7 +4,7 @@ def authorization(username, password, db_usernames, db_passwords):
     status = False 
     if username == db_usernames:
         if password:
-            if password == db_passwords:
+            if password == bytes(db_passwords, 'utf-8'):
                 status = True
                 messages = "Authorized."
             else:
