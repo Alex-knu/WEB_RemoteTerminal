@@ -113,7 +113,7 @@ def Connect():
     hostname = request_data['host']
     port = request_data['port']
     username = request_data['username']
-    password = hesh.heshing(request_data['password']) if 'password' in request_data else None
+    password = request_data['password'] if 'password' in request_data else None
     command = request_data['command']
     root_password = request_data['rootPassword'] if 'rootPassword' in request_data else None
 
