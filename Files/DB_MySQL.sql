@@ -90,3 +90,12 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+/*INSERT INTO Users
+VALUES 
+('c245c511-c076-4ee2-8df0-aa804ad5cc95', 'lol2', 'lol', 'lolname');
+
+INSERT INTO UserToMachine
+VALUES 
+('96799c6d-2bcc-4826-b8ef-50f1d502b662', 'c245c511-c076-4ee2-8df0-aa804ad5cc95', 'machineName', 'host', 'username', 'password', 22);*/

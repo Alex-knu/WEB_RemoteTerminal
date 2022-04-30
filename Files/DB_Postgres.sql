@@ -47,3 +47,11 @@ ALTER TABLE ONLY "HistoryToMachine"
 ALTER TABLE ONLY "UserToMachine"
     ADD CONSTRAINT usertomachine_users_guid_fk FOREIGN KEY ("UserGUID") REFERENCES "Users"("Guid") ON UPDATE CASCADE ON DELETE CASCADE;
 
+
+/*INSERT INTO "Users"
+        ("Guid", "Login", "Password", "Name") VALUES
+        ('c245c511-c076-4ee2-8df0-aa804ad5cc95', 'lol2', 'lol', 'lolname');
+
+INSERT INTO "UserToMachine"
+        ("Guid", "UserGUID", "MachineName", "Host", "User", "Password", "Port") VALUES
+        ('96799c6d-2bcc-4826-b8ef-50f1d502b662', 'c245c511-c076-4ee2-8df0-aa804ad5cc95', 'machineName', 'host', 'username', 'password', 22);*/
