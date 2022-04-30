@@ -45,8 +45,7 @@ Finally, you just have to run `main.py` file.
 ```
 {
     "host": "10.0.0.45",
-    "port": 22
-    "login": "my",
+    "port": 22,
     "password": "1",
     "username": "alex",
     "UseSSHKey": false,
