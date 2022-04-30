@@ -128,7 +128,15 @@ The method allows you to remove a user from the system.
     "machineGUID": "c245c511-c076-4ee2-8df0-aa804ad5cc95"
 }
 ```
+
 The method allows you to remove the user's computer from the system.
+- Method path -> /logout
+- Request Type -> POST
+```
+{
+    "username": "user"
+}
+```
 ### How to use the app
 To use the provided controllers, you need to log in using the /login controller. Then you can use any controllers in the
 system. Authorization is not needed only for /saveuser. To end a session, use /logout.
