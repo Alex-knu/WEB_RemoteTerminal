@@ -1,3 +1,5 @@
+## WEB Remote Terminal
+
 This is *Remote Terminal* web app designed to execute bash commands on remote Ubuntu hosts. The main architecture is:
 
 <img src="arch.jpg" width="350" />
