@@ -4,10 +4,9 @@ import psycopg2
 import mysql.connector
 import uuid
 
-from WEB_RemoteTerminal.DataBase.Models.Users import Users
-from WEB_RemoteTerminal.DataBase.Models.UserToMachine import UserToMachine
-from WEB_RemoteTerminal.Security import Hesh as hesh
-
+from DataBase.Models.Users import Users
+from DataBase.Models.UserToMachine import UserToMachine
+from Security import Hesh as hesh
 
 config = configparser.ConfigParser()
 config.read("Files/settings.ini")
@@ -33,13 +32,41 @@ def GetConnection():
     return connection
 
 
+def GetAllUsers():
+    connection = GetConnection()
+    response = []
+    print(connection)
+    with connection.cursor(buffered=True) as cursor:
+        cursor.execute(f"""SELECT * FROM Users""")
+        for row in cursor:
+            response.append(row)
+
+    if response is None:
+        return None
+
+    result = json.dumps([
+        {'Guid': row[0],
+         'Login': row[1],
+         'Password': row[2],
+         'Name': row[3]}
+        for row in response])
+
+    connection.close()
+    return result
+
+
 def SaveUser(login, password, name):
     connection = GetConnection()
+    print(connection)
     newGUID = uuid.uuid4()
     hash_password_str = hesh.heshing(password).decode('UTF-8')
+    print(
+        f"""INSERT INTO Users (Guid, Login, Password, Name) VALUES ('{newGUID}', '{login}', '{hash_password_str}', '{name}')""")
     with connection.cursor() as cursor:
-        cursor.execute(f"""INSERT INTO "Users" ("Guid", "Login", "Password", "Name") 
-        VALUES ('{newGUID}', '{login}', '{hash_password_str}', '{name}')""")
+        cursor.execute(
+            f"""INSERT INTO Users (Guid, Login, Password, Name) VALUES ('{newGUID}', '{login}', '{hash_password_str}', '{name}')""")
+
+    connection.commit()
     connection.close()
 
 
@@ -51,6 +78,8 @@ def SaveMachine(userGUID, machineName, host, username, password, port):
         cursor.execute(f"""INSERT INTO "UserToMachine" 
         ("Guid", "UserGUID", "MachineName", "Host", "User", "Password", "Port") VALUES 
         ('{newGUID}', '{userGUID}', '{machineName}', '{host}', '{username}', '{hash_password_str}', '{port}')""")
+
+    connection.commit()
     connection.close()
 
 
@@ -58,8 +87,14 @@ def SaveHistory(machineGUID, command, time):
     connection = GetConnection()
     newGUID = uuid.uuid4()
     with connection.cursor() as cursor:
+        # cursor.execute(f"""SELECT UserGUID FROM "UserToMachine" WHERE "Guid" = '{machineGUID}'""")
+        # response = cursor.fetchone()
+        # cursor.execute(f"""INSERT INTO "HistoryToMachine" ("Guid", "MachineGUID", "Command", "Time")
+        #         VALUES ('{newGUID}', '{response[0]}', '{command}', '{time}')""")
         cursor.execute(f"""INSERT INTO "HistoryToMachine" ("Guid", "MachineGUID", "Command", "Time") 
         VALUES ('{newGUID}', '{machineGUID}', '{command}', '{time}')""")
+
+    connection.commit()
     connection.close()
 
 
@@ -78,6 +113,8 @@ def UpdateUser(guid, login, password, name):
     query = query.replace("""' \"""", """', \"""")
     with connection.cursor() as cursor:
         cursor.execute(query)
+
+    connection.commit()
     connection.close()
 
 
@@ -96,6 +133,8 @@ def UpdateMachine(guid, host, port, password):
     query = query.replace("""' \"""", """', \"""")
     with connection.cursor() as cursor:
         cursor.execute(query)
+
+    connection.commit()
     connection.close()
 
 
@@ -103,6 +142,8 @@ def DeleteUser(guid):
     connection = GetConnection()
     with connection.cursor() as cursor:
         cursor.execute(f"""DELETE FROM "Users" WHERE "Guid" = '{guid}'""")
+
+    connection.commit()
     connection.close()
 
 
@@ -110,6 +151,8 @@ def DeleteMachine(guid):
     connection = GetConnection()
     with connection.cursor() as cursor:
         cursor.execute(f"""DELETE FROM "UserToMachine" WHERE "Guid" = '{guid}'""")
+
+    connection.commit()
     connection.close()
 
 
@@ -154,6 +197,7 @@ def GetUser(login):
     )
     connection.close()
     return result
+
 
 def GetHistory(userGUID):
     connection = GetConnection()

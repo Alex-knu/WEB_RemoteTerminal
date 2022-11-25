@@ -1,6 +1,5 @@
+mysql-connector-python
 paramiko
-time
-datetime
-re
 psycopg2-binary
 flask_login
+flask

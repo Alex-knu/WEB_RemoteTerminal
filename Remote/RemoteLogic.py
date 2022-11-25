@@ -3,8 +3,8 @@ import platform
 import time
 import re
 
-import WEB_RemoteTerminal.Remote.WindowsStrategy as ws
-import WEB_RemoteTerminal.Remote.LinuxStrategy as ls
+import Remote.WindowsStrategy as ws
+import Remote.LinuxStrategy as ls
 
 
 def execute_command_ssh(session: paramiko.client.SSHClient, command: str, root_password: str) -> str:
