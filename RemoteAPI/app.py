@@ -46,7 +46,7 @@ def hello():
 @app.route('/login', methods=['POST'])
 def Auth():
     request_data = request.authorization
-    if request_data.type is not 'basic':
+    if request_data.type != 'basic':
         return my401('There is not basic auth type.')
     if request_data.username is None:
         return my403('There is no username in the request.')
@@ -284,4 +284,4 @@ def unauthorized(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

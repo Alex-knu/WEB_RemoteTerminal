@@ -3,3 +3,4 @@ paramiko
 psycopg2-binary
 flask_login
 flask
+Werkzeug==2.3.0

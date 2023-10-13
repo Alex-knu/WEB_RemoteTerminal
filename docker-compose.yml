@@ -1,0 +1,29 @@
+version: '3'
+
+networks:
+  netw:
+    driver: bridge
+
+services:
+
+  remote_api:
+    build:
+      context: ./RemoteAPI
+      dockerfile: Dockerfile
+    container_name: remote_api
+    networks:
+    - netw
+    ports:
+    - 1414:5000
+    - 1413:80
+    #depends_on:
+
+    #postgresql:
+      #image: postgres:16.0
+      #container_name: postgresql
+      #volumes:
+      #- ./db:/var/lib/mysql
+      #- ./app/database/script.sql:/docker-entrypoint-initdb.d/script.sql
+      #networks:
+      #- netw
+      #command: --init-file /docker-entrypoint-initdb.d/script.sql'''
