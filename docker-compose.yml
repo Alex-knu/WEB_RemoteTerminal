@@ -6,6 +6,22 @@ networks:
 
 services:
 
+  test_server:
+    image: debian:trixie
+    networks:
+    - netw
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get install -y openssh-server &&
+        echo 'root:root' | chpasswd &&
+        sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/g' /etc/ssh/sshd_config &&
+        useradd -m admin &&
+        echo "admin:admin" | chpasswd &&
+        mkdir /var/run/sshd &&
+        /usr/sbin/sshd -D 
+      "
+
   remote_api:
     build:
       context: ./RemoteAPI
@@ -14,7 +30,7 @@ services:
     networks:
     - netw
     ports:
-    - 1414:5000
+    - "1414:5000"
     #depends_on:
 
     #postgresql:
