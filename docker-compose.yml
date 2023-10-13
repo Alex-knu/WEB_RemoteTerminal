@@ -15,7 +15,6 @@ services:
     - netw
     ports:
     - 1414:5000
-    - 1413:80
     #depends_on:
 
     #postgresql:
