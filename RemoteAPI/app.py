@@ -21,9 +21,9 @@ app.config['SESSION_TYPE'] = config['AppConfig']['SESSION_TYPE']
 app.config['SECRET_KEY'] = config['AppConfig']['SECRET_KEY']
 
 
-@login_manager.user_loader
+'''@login_manager.user_loader
 def load_user(login):
-    return wwdb.GetUser(login)
+    return wwdb.GetUser(login)'''
 
 
 def my403(text):
@@ -43,10 +43,10 @@ def hello():
     return 'Hello, World!'
 
 
-@app.route('/login', methods=['POST'])
+'''@app.route('/login', methods=['POST'])
 def Auth():
     request_data = request.authorization
-    if request_data.type is not 'basic':
+    if request_data.type != 'basic':
         return my401('There is not basic auth type.')
     if request_data.username is None:
         return my403('There is no username in the request.')
@@ -95,10 +95,10 @@ def logout():
 
     session.pop(login, None)
     return f'User {login} was loged out.'
-
+'''
 
 @app.route('/connect', methods=['POST'])
-@login_required
+#@login_required
 def Connect():
     request_data = request.get_json()
 
@@ -127,7 +127,7 @@ def Connect():
                 return my403('It is impossible to establish SSH connect via keys without password for the first time')
             rem.keygen(hostname, username, password)
         result = rem.execute_remote_command_key(hostname, username, command, root_password)
-    wwdb.SaveHistory('96799c6d-2bcc-4826-b8ef-50f1d502b662', command, datetime.datetime.now())
+    #wwdb.SaveHistory('96799c6d-2bcc-4826-b8ef-50f1d502b662', command, datetime.datetime.now()) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! commented
 
     # Но по нормальному должно было быть так
     # data = wwdb.GetUserMachine(request_data['machinName'], request_data['user'], request_data['password'])
@@ -141,7 +141,7 @@ def Connect():
 
 
 @app.route('/gethistory', methods=['GET'])
-@login_required
+#@login_required
 def GetHistory():
     request_data = request.get_json()
 
@@ -156,7 +156,7 @@ def GetHistory():
 
 
 @app.route('/savemachine', methods=['POST'])
-@login_required
+#@login_required
 def SaveMachine():
     request_data = request.get_json()
 
@@ -284,4 +284,4 @@ def unauthorized(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
