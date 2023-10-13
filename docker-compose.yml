@@ -32,13 +32,3 @@ services:
     ports:
     - "1414:5000"
     #depends_on:
-
-    #postgresql:
-      #image: postgres:16.0
-      #container_name: postgresql
-      #volumes:
-      #- ./db:/var/lib/mysql
-      #- ./app/database/script.sql:/docker-entrypoint-initdb.d/script.sql
-      #networks:
-      #- netw
-      #command: --init-file /docker-entrypoint-initdb.d/script.sql'''
