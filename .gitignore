@@ -1,1 +1,13 @@
 keys/
+
+IdentityAPI/bin/*
+IdentityAPI/obj/*
+
+DataManagerAPI/bin/*
+DataManagerAPI/obj/*
+
+GatewayAPI/bin/*
+GatewayAPI/obj/*
+
+.vscode/launch.json
+.vscode/tasks.json
