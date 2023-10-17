@@ -11,3 +11,6 @@ GatewayAPI/obj/*
 
 .vscode/launch.json
 .vscode/tasks.json
+/.vs
+/DataManagerAPI/.vs
+*.sln
