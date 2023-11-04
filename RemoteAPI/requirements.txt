@@ -2,3 +2,4 @@ uvicorn
 typing
 fastapi
 pydantic
+paramiko
