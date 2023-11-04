@@ -1,0 +1,38 @@
+<div class="card">
+  <p-toast></p-toast>
+  <p-table #dt [value]="users" [rows]="10" [paginator]="true"
+    [globalFilterFields]="['name','country.name','representative.name','status']"
+    [rowHover]="true" dataKey="id" currentPageReportTemplate="показати з {first} по {last} із {totalRecords}
+        entries" [showCurrentPageReport]="true">
+    <ng-template pTemplate="caption">
+      <div class="p-d-flex p-ai-center p-jc-between">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" (input)="dt.filterGlobal($event, 'contains')" placeholder="Пошук..." />
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">Ім'я<p-sortIcon field="name"></p-sortIcon></th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-user>
+      <tr>
+        <td>{{user.name}}</td>
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+            (click)="editUser(user)"></button>
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            (click)="deleteUser(user)"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+</div>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

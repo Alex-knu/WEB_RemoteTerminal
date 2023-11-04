@@ -1,0 +1,55 @@
+<div class="flex flex-column align-items-center justify-content-center">
+  <p-toast></p-toast>
+  <div
+    style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
+    <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius:53px">
+      <form *ngIf="!success" #f="ngForm" (ngSubmit)="onSubmit()">
+        <div class="text-center mb-5">
+          <h1 class="h3 mb-3 font-weight-normal">Реєстрація</h1>
+        </div>
+
+        <div>
+          <label for="name" class="block text-900 text-xl font-medium mb-2">Ім'я користувача</label>
+          <input pInputText type="text" id="name" name="name" [(ngModel)]="userRegistration.username"
+            class="form-control" placeholder="Your name" required autoFocus>
+
+          <label for="name" class="block text-900 text-xl font-medium mb-2">Ім'я</label>
+          <input pInputText type="text" id="name" name="name" [(ngModel)]="userRegistration.firstName"
+            class="form-control" placeholder="Your name" required autoFocus>
+
+          <label for="name" class="block text-900 text-xl font-medium mb-2">Прізвище</label>
+          <input pInputText type="text" id="name" name="name" [(ngModel)]="userRegistration.lastName"
+            class="form-control" placeholder="Your name" required autoFocus>
+
+          <label for="name" class="block text-900 text-xl font-medium mb-2">Телефон</label>
+          <input pInputText type="text" id="name" name="name" [(ngModel)]="userRegistration.phoneNumber"
+            class="form-control" placeholder="Your name" required autoFocus>
+
+          <label for="email" class="block text-900 text-xl font-medium mb-2">Електронна пошта</label>
+          <input pInputText type="email" id="email" name="email" #email="ngModel" [(ngModel)]="userRegistration.email"
+            class="form-control" placeholder="Email address" email required>
+          <small [hidden]="email.valid || (email.pristine && !submitted)" class="text-danger">Please enter a valid
+            email</small>
+
+          <label for="password" class="block text-900 font-medium text-xl mb-2">Пароль</label>
+          <input pInputText type="password" id="password" name="password" [(ngModel)]="userRegistration.password"
+            class="form-control" placeholder="Password" aria-describedby="passwordHelp" required>
+          <small id="passwordHelp" class="form-text text-muted">Min. 6 characters with at least one non alphanumeric
+            character</small>
+
+          <div class="flex flex-wrap gap-2 justify-content-center">
+            <button pButton label="Зарееструватися" class="p-button-icon p-button-icon-right pi pi-bookmark"
+              type="submit" [disabled]="!f.form.valid"></button>
+          </div>
+        </div>
+        <div *ngIf="error" class="alert alert-danger mt-3" role="alert">
+          <strong>Oops!</strong> {{error}}
+        </div>
+      </form>
+      <div *ngIf="success" class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Well done!</h4>
+        <p>Your account was created successfully, <a routerLink="/login">Please login</a> to continue.</p>
+      </div>
+    </div>
+  </div>
+</div>
