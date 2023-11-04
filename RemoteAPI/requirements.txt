@@ -1,6 +1,4 @@
-mysql-connector-python
-paramiko
-psycopg2-binary
-flask_login
-flask
-Werkzeug==2.3.0
+uvicorn
+typing
+fastapi
+pydantic
