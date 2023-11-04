@@ -2,7 +2,7 @@
 
 namespace DataManagerAPI.Core.Interfaces
 {
-    internal interface IMachineUserRepository
+    public interface IMachineUserRepository
     {
         Task<MachineUser> GetAsync(Guid guid);
         Task<MachineUser> AddAsync(MachineUser machineUser);

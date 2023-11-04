@@ -3,7 +3,7 @@ using System;
 
 namespace DataManagerAPI.Core.Interfaces
 {
-    internal interface IMachineRepository
+    public interface IMachineRepository
     {
         Task<Machine> GetAsync(Guid guid);
         Task<Machine> AddAsync(Machine machine);

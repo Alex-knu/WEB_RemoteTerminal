@@ -2,7 +2,7 @@
 
 namespace DataManagerAPI.Core.Interfaces
 {
-    internal interface ICommandHistoryRepository
+    public interface ICommandHistoryRepository
     {
         Task<CommandHistory> GetAsync(Guid guid);
         Task<CommandHistory> AddAsync(CommandHistory commandHistory);

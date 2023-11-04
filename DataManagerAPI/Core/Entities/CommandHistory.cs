@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataManagerAPI.Core.Entities
 {
-    internal class CommandHistory
+    public class CommandHistory
     {
         public Guid Id { get; set; }
         public MachineUser MachineUser { get; set; }

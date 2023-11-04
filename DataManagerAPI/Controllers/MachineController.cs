@@ -10,9 +10,10 @@ namespace DataManagerAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    internal class MachineController : Controller
+    public class MachineController : ControllerBase
     {
-        IMachineRepository _MachineRepository;
+        private readonly IMachineRepository _MachineRepository;
+        
         public MachineController(IMachineRepository machineRepository)
         {
             _MachineRepository = machineRepository;
@@ -56,7 +57,7 @@ namespace DataManagerAPI.Controllers
                 return NotFound();
             }
 
-            _MachineRepository.UpdateAsync(updatedMachine);
+            await _MachineRepository.UpdateAsync(updatedMachine);
             //return CreatedAtRoute("Get", new { id = machine.Id }, machine);
             return new ObjectResult(machine);
         }
@@ -64,7 +65,7 @@ namespace DataManagerAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid guid)
         {
-            var deletedmachine = _MachineRepository.DeleteAsync(guid);
+            var deletedmachine = await _MachineRepository.DeleteAsync(guid);
 
             if (deletedmachine == null)
             {

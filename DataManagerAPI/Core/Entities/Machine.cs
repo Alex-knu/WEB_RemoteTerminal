@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataManagerAPI.Core.Entities
 {
-    internal class Machine
+    public class Machine
     {
         public Guid Id { get; set; }
         //[ForeignKey("UserId")]
