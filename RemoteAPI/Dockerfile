@@ -7,6 +7,6 @@ COPY ./ /app
 RUN pip install -r /app/requirements.txt \
 	&& apk add sshpass
 
-CMD ["python", "/app/app.py"]
+CMD ["python", "/app/main.py"]
 
 EXPOSE 5000

@@ -14,3 +14,5 @@ GatewayAPI/obj/*
 /.vs
 /DataManagerAPI/.vs
 *.sln
+
+*.drawio
