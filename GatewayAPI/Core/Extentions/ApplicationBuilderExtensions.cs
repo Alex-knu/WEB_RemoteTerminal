@@ -1,5 +1,4 @@
 using GatewayAPI.Extentions.Handlers;
-using Microsoft.AspNetCore.Builder;
 
 namespace GatewayAPI.Extentions.Extentions
 {

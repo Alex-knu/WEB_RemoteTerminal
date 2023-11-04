@@ -1,9 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 using GatewayAPI.Extentions.Models;
 using GatewayAPI.Extentions.Models.Exceptions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
 namespace GatewayAPI.Extentions.Extentions

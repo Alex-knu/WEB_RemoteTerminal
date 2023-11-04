@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text.Json;
 using GatewayAPI.Extentions.Models.Exceptions;
-using Microsoft.AspNetCore.Http;
 using KeyNotFoundException = GatewayAPI.Extentions.Models.Exceptions.KeyNotFoundException;
 using NotImplementedException = GatewayAPI.Extentions.Models.Exceptions.NotImplementedException;
 using UnauthorizedAccessException = GatewayAPI.Extentions.Models.Exceptions.UnauthorizedAccessException;
