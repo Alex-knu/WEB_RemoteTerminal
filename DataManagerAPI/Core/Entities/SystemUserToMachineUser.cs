@@ -1,13 +1,14 @@
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace DataManagerAPI.Core.Entities
 {
-    internal class CommandHistory
+    internal class SystemUserToMachineUser
     {
+        [Key]
         public Guid Id { get; set; }
+        public Guid SystemUserId { get; set; }
         public MachineUser MachineUser { get; set; }
-        public string Command { get; set; }
-        public DateTime Time { get; set; }
+        
     }
 }
