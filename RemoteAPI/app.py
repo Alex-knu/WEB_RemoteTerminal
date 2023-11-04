@@ -97,27 +97,27 @@ def logout():
     return f'User {login} was loged out.'
 '''
 
-@app.route('/connect', methods=['POST'])
+@app.route('/api/connect', methods=['POST'])
 #@login_required
 def Connect():
     request_data = request.get_json()
 
-    if 'host' not in request_data:
+    if 'Host' not in request_data:
         return my403('There is no host in the request')
-    if 'port' not in request_data:
+    if 'Port' not in request_data:
         return my403('There is no port in the request')
-    if 'username' not in request_data:
+    if 'Username' not in request_data:
         return my403('There is no username in the request')
-    if 'command' not in request_data:
+    if 'Command' not in request_data:
         return my403('There is no command in the request')
 
     use_ssh_key = request_data["UseSSHKey"] if 'UseSSHKey' in request_data else None
-    hostname = request_data['host']
-    port = request_data['port']
-    username = request_data['username']
-    password = request_data['password'] if 'password' in request_data else None
-    command = request_data['command']
-    root_password = request_data['rootPassword'] if 'rootPassword' in request_data else None
+    hostname = request_data['Host']
+    port = request_data['Port']
+    username = request_data['Username']
+    password = request_data['Password'] if 'Password' in request_data else None
+    command = request_data['Command']
+    root_password = request_data['RootPassword'] if 'RootPassword' in request_data else None
 
     if (use_ssh_key is False or use_ssh_key is None) and password is not None:
         result = rem.execute_remote_command_pass(hostname, port, username, password, command, root_password)
