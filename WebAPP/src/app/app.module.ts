@@ -1,18 +1,42 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AppLayoutModule } from './layout/app.layout.module';
+import { NotfoundComponent } from './components/notfound/notfound.component';
+import { PrimeNgComponentsModule } from './modules/primeng-components-module/primeng-components.module';
+import { services } from './shared/services';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './shared/services/auth-interceptor.service';
+import { ErrorComponent } from './components/auth/error/error.component';
+import { LoginComponent } from './components/auth/login/login.component';
+import { RegisterComponent } from './components/auth/register/register.component';
+import { AccessComponent } from './components/auth/access/access.component';
+import { UserTableComponent } from './components/users/user-table/user-table.component';
+import { UserInfoComponent } from './components/users/user-info/user-info.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AccessComponent,
+    NotfoundComponent,
+    ErrorComponent,
+    LoginComponent,
+    RegisterComponent,
+    UserTableComponent,
+    UserInfoComponent
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AppLayoutModule,
+    PrimeNgComponentsModule
   ],
-  providers: [],
+  providers: [
+    services,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
+  ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
