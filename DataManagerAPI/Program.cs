@@ -22,6 +22,18 @@ builder.Services.AddTransient<ISystemUserToMachineUserRepository, SystemUserToMa
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    Console.WriteLine("HAHA");
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<DataManagerApiDbContext>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
+}
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
