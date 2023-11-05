@@ -17,11 +17,20 @@ builder.Services
     {
         client.BaseAddress = new Uri(configuration.GetValue<string>("RemoteAPIRoute"));
     });
+builder.Services
+    .AddHttpClient("DataServer", client =>
+    {
+        client.BaseAddress = new Uri(configuration.GetValue<string>("DataAPIRoute"));
+    });
 
 // Add services to the container.
 
 builder.Services.AddScoped(typeof(IRouteService), typeof(RouteService));
 builder.Services.AddScoped(typeof(IRemoteService), typeof(RemoteService));
+builder.Services.AddScoped(typeof(ICommandHistoryService), typeof(CommandHistoryService));
+builder.Services.AddScoped(typeof(IMachineService), typeof(MachineService));
+builder.Services.AddScoped(typeof(IMachineUserService), typeof(MachineUserService));
+builder.Services.AddScoped(typeof(ISystemUserToMachineUserService), typeof(SystemUserToMachineUserService));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
