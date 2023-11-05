@@ -1,0 +1,12 @@
+<div class="card">
+  <div class="p-field">
+    <label for="description">Команда</label>
+    <div class="p-field">
+      <textarea id="description" pInputTextarea [(ngModel)]="command" required rows="1"
+        cols="20"></textarea>
+    </div>
+  </div>
+
+  <button pButton pRipple label="Виконати" icon="pi pi-check" class="p-button-text"
+    (click)="execute()"></button>
+</div>

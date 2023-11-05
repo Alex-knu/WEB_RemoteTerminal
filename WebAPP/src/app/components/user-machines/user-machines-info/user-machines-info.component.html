@@ -1,0 +1,27 @@
+<div class="card" *ngIf="machine">
+  <div class="p-field">
+    <label for="name">Назва</label>
+    <div class="p-field">
+      <input type="text" pInputText id="name" [(ngModel)]="machine.name" required autofocus />
+      <small class="p-invalid" *ngIf="submitted && !machine.name">Name is required.</small>
+    </div>
+  </div>
+
+  <div class="p-field">
+    <label for="description">Хост</label>
+    <div class="p-field">
+      <input id="description" pInputTextarea [(ngModel)]="machine.host" required rows="3"
+        cols="20"/>
+    </div>
+  </div>
+
+  <div class="p-field">
+    <label for="description">Порт</label>
+    <div class="p-field">
+      <p-inputNumber inputId="profit" [(ngModel)]="machine.port"></p-inputNumber>
+    </div>
+  </div>
+
+  <button pButton pRipple label="Зберегти" icon="pi pi-check" class="p-button-text"
+    (click)="saveMachine()"></button>
+</div>
