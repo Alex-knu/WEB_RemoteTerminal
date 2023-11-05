@@ -34,14 +34,30 @@ export class AppMenuComponent implements OnInit {
         ]
       },
       {
+        label: 'Машини',
+        visible: true,
+        //visible: this.isVisible(this.admin),
+        items: [
+          {
+            label: 'Машини',
+            icon: 'pi pi-fw pi-desktop',
+            routerLink: ['/user-machines/user-machines-table'],
+            visible: true
+            //visible: this.isVisible(this.admin)
+          }
+        ]
+      },
+      {
         label: 'Користувачі',
-        visible: this.isVisible(this.admin),
+        visible: true,
+        //visible: this.isVisible(this.admin),
         items: [
           {
             label: 'Користувачі',
             icon: 'pi pi-fw pi-users',
             routerLink: ['/user/user-table'],
-            visible: this.isVisible(this.admin)
+            visible: true
+            //visible: this.isVisible(this.admin)
           }
         ]
       }

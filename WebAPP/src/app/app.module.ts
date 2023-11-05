@@ -14,6 +14,9 @@ import { RegisterComponent } from './components/auth/register/register.component
 import { AccessComponent } from './components/auth/access/access.component';
 import { UserTableComponent } from './components/users/user-table/user-table.component';
 import { UserInfoComponent } from './components/users/user-info/user-info.component';
+import { UserMachineTableComponent } from './components/user-machines/user-machines-table/user-machines-table.component';
+import { UserMachineInfoComponent } from './components/user-machines/user-machines-info/user-machines-info.component';
+import { UserMachineExecuteCommandComponent } from './components/user-machines/user-machines-execute-command/user-machines-execute-command.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,10 @@ import { UserInfoComponent } from './components/users/user-info/user-info.compon
     LoginComponent,
     RegisterComponent,
     UserTableComponent,
-    UserInfoComponent
+    UserInfoComponent,
+    UserMachineTableComponent,
+    UserMachineInfoComponent,
+    UserMachineExecuteCommandComponent
   ],
   imports: [
     AppRoutingModule,
