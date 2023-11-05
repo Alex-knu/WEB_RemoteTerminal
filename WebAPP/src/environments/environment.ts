@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   serveces: {
     webserverApiPath: 'api/',
-    AuthServerUrl: 'http://localhost:5010/',
+    AuthServerUrl: 'http://localhost:1415/',
     RouteApiUrl: 'http://localhost:5008/'
   }
 };

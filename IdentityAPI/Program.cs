@@ -74,7 +74,7 @@ app.UseStaticFiles();
 app.UseCors(
     builder => builder
         .WithOrigins(configuration.OriginUrls)
-        .SetIsOriginAllowedToAllowWildcardSubdomains()
+        .AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader()
 );
