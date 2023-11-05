@@ -23,7 +23,7 @@ namespace DataManagerAPI.Infrastructure.Repositories
         public async Task<SystemUserToMachineUser> DeleteMachineUserForSystemUserAsync(SystemUserToMachineUser systemUserToMachineUser)
         {
             SystemUserToMachineUser currentSystemUserToMachineUser = Context.SystemUserToMachineUser.Where(su => 
-                (su.MachineUser.Id == systemUserToMachineUser.MachineUser.Id && su.SystemUserId == systemUserToMachineUser.SystemUserId)).FirstOrDefault();
+                su.MachineUserId == systemUserToMachineUser.MachineUserId && su.SystemUserId == systemUserToMachineUser.SystemUserId).FirstOrDefault();
 
             if (currentSystemUserToMachineUser != null)
             {

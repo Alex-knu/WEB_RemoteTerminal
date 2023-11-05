@@ -6,11 +6,10 @@ namespace DataManagerAPI.Core.Entities
     public class Machine
     {
         public Guid Id { get; set; }
-        //[ForeignKey("UserId")]
         public string Name { get; set; }
         public string Host { get; set; }
         public int Port { get; set; }
 
-        public ICollection<MachineUser> MachineUsers { get; }
+        //public ICollection<MachineUser>? MachineUsers { get; }
     }
 }

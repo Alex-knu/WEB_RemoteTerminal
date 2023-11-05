@@ -18,10 +18,10 @@ namespace DataManagerAPI.Infrastructure.Repositories
 
         public async Task<CommandHistory> AddAsync(CommandHistory commandHistory)
         {
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
-                await Context.CommandsHistory.AddAsync(commandHistory);
-                Context.SaveChangesAsync();
+                Context.CommandsHistory.Add(commandHistory);
+                Context.SaveChanges();
             });
             return commandHistory;
         }

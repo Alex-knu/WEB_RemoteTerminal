@@ -8,7 +8,8 @@ namespace DataManagerAPI.Core.Entities
         [Key]
         public Guid Id { get; set; }
         public Guid SystemUserId { get; set; }
-        public MachineUser MachineUser { get; set; }
-        
+        public MachineUser? MachineUser { get; set; }
+        public Guid MachineUserId { get; set; }
+
     }
 }

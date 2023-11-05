@@ -18,8 +18,8 @@ namespace DataManagerAPI.Controllers
         {
             _MachineRepository = machineRepository;
         }
-
-        [HttpGet("{id}", Name = "Get")]
+        
+        [HttpGet("{guid}", Name = "Get")]
         public async Task<IActionResult> Get(Guid guid)
         {
             Machine machine = await _MachineRepository.GetAsync(guid);
@@ -40,7 +40,8 @@ namespace DataManagerAPI.Controllers
                 return BadRequest();
             }
             await _MachineRepository.AddAsync(machine);
-            return CreatedAtRoute("Get", new { id = machine.Id }, machine);
+            return new ObjectResult(machine);
+            //return CreatedAtRoute("Get", new { id = machine.Id }, machine);
         }
 
         [HttpPut]
@@ -62,17 +63,17 @@ namespace DataManagerAPI.Controllers
             return new ObjectResult(machine);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{guid}")]
         public async Task<IActionResult> Delete(Guid guid)
         {
-            var deletedmachine = await _MachineRepository.DeleteAsync(guid);
+            var deletedMachine = await _MachineRepository.DeleteAsync(guid);
 
-            if (deletedmachine == null)
+            if (deletedMachine == null)
             {
                 return BadRequest();
             }
 
-            return new ObjectResult(deletedmachine);
+            return new ObjectResult(deletedMachine);
         }
     }
 }

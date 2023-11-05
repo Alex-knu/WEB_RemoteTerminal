@@ -9,5 +9,6 @@ namespace DataManagerAPI.Core.Interfaces
         Task<Machine> AddAsync(Machine machine);
         Task<Machine> UpdateAsync(Machine machine);
         Task<Machine> DeleteAsync(Guid guid);
+        //Task<Machine> GetSystemUserAllMachines(Guid sysUserGuid);
     }
 }
