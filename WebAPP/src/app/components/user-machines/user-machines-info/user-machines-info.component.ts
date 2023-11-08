@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { UUID } from 'angular2-uuid';
 import { MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { MachineUserModel } from 'src/app/shared/models/machineUser.model';
+import { SystemUserToMachineUserService } from 'src/app/shared/services/api/systemUserToMachineUserService.service';
+import { MachineModel } from 'src/app/shared/models/machine.model';
+import { MachineUserService } from 'src/app/shared/services/api/machineUser.service';
 
 @Component({
   selector: 'app-user-machines-info',
@@ -11,9 +16,11 @@ import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dy
 
 export class UserMachineInfoComponent {
   submitted: boolean;
-  machine: any;
+  machineUser: MachineUserModel;
 
   constructor(
+    private systemUserToMachineUserService: SystemUserToMachineUserService,
+    private machineUserService: MachineUserService,
     private messageService: MessageService,
     public dialogService: DialogService,
     public ref: DynamicDialogRef,
@@ -23,41 +30,40 @@ export class UserMachineInfoComponent {
     this.submitted = false;
 
     if (this.config.data != null) {
-      this.machine = this.config.data;
+      this.machineUser = this.config.data;
     }
     else {
-      this.machine = {
-        name: 'Home',
-        host: '10.10.1.152',
-        port: 22
-      };
+      this.machineUser = new MachineUserModel;
+      this.machineUser.machine = new MachineModel;
+      this.machineUser.machine.port = 22;
     }
   }
 
   saveMachine() {
     this.submitted = true;
 
-    if (this.machine.id) {
-      // this.baseApplicationService.single.update(this.application).subscribe(
-      //   application => {
-      //     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Заявку оновлено' });
-      //     this.ref.close(application);
-      //   },
-      //   error => {
-      //     this.messageService.add({ severity: 'error', summary: 'Error', detail: String((error as HttpErrorResponse).error).split('\n')[0] });
-      //   })
+    if (this.machineUser.id) {
+      this.machineUserService.single.update(this.machineUser).subscribe(
+        machineUser => {
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'З`єднання оновлено' });
+          this.ref.close(machineUser);
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: String((error as HttpErrorResponse).error).split('\n')[0] });
+        })
     }
     else {
-      this.machine.id = UUID.UUID();
-      // this.baseApplicationService.single.create(this.application).subscribe(
-      //   application => {
-      //     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Заявку створено' });
-      //     this.ref.close(application);
-      //   },
-      //   error => {
-      //     this.application.id = null;
-      //     this.messageService.add({ severity: 'error', summary: 'Error', detail: String((error as HttpErrorResponse).error).split('\n')[0] });
-      //   })
+      this.machineUser.id = UUID.UUID();
+      this.machineUser.machine.id = UUID.UUID();
+      this.systemUserToMachineUserService.single.create(this.machineUser).subscribe(
+        machineUser => {
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'З`єднання створено' });
+          this.ref.close(machineUser);
+        },
+        error => {
+          this.machineUser.id = null;
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: String((error as HttpErrorResponse).error).split('\n')[0] });
+        })
     }
   }
 }

@@ -9,5 +9,6 @@ namespace GatewayAPI.Core.Models.DTO
         public bool? UseSSHKey { get; set; }
         public string? RootPassword { get; set; }
         public string Command { get; set; }
+        public Guid MachineUserId { get; set; }
     }
 }

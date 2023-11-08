@@ -3,6 +3,6 @@ export const environment = {
   serveces: {
     webserverApiPath: 'api/',
     AuthServerUrl: 'http://localhost:1415/', //'http://auth_server/'
-    RouteApiUrl: 'http://localhost:5008/' //'http://router.api/'
+    RouteApiUrl: 'http://localhost:1417/' //'http://router.api/'
   }
 };

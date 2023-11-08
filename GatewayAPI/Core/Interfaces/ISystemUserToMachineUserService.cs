@@ -1,12 +1,11 @@
 using GatewayAPI.Core.Models.DTO;
-using Microsoft.AspNetCore.Mvc;
 
 namespace GatewayAPI.Core.Interfaces
 {
     public interface ISystemUserToMachineUserService
     {
-        Task<IEnumerable<SystemUserToMachineUserDTO>> GetMachineUsers(Guid query);
-        Task<SystemUserToMachineUserDTO> Create(SystemUserToMachineUserDTO query);
+        Task<IEnumerable<MachineUserDTO?>> GetMachineUsers(HttpContext httpContext);
+        Task<SystemUserToMachineUserDTO> Create(HttpContext httpContext, MachineUserDTO query);
         Task<SystemUserToMachineUserDTO> Delete(Guid query);
     }
 }

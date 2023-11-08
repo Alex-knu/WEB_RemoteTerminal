@@ -3,6 +3,10 @@ import { MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { UserMachineInfoComponent } from '../user-machines-info/user-machines-info.component';
 import { UserMachineExecuteCommandComponent } from '../user-machines-execute-command/user-machines-execute-command.component';
+import { MachineUserService } from 'src/app/shared/services/api/machineUser.service';
+import { SystemUserToMachineUserService } from 'src/app/shared/services/api/systemUserToMachineUserService.service';
+import { MachineUserModel } from 'src/app/shared/models/machineUser.model';
+import { CommandHistoryService } from 'src/app/shared/services/api/commandHistoryService.service';
 
 @Component({
   selector: 'app-user-machines-table',
@@ -11,33 +15,36 @@ import { UserMachineExecuteCommandComponent } from '../user-machines-execute-com
 })
 
 export class UserMachineTableComponent {
-  machines: any[] = [];
+  machines: MachineUserModel[] = [];
   ref: DynamicDialogRef;
   loading: boolean = false;
   machine: any;
 
   constructor(
+    private commandHistoryService: CommandHistoryService,
+    private systemUserToMachineUserService: SystemUserToMachineUserService,
     private messageService: MessageService,
     private dialogService: DialogService) { }
 
   ngOnInit() {
-    this.machines = [
-      {
-        name: 'Home',
-        host: '10.10.1.152',
-        port: 22,
-        changeValues: [
-          {
-            command: 'ls',
-            time: '01.01.2000',
-          }
-        ]
-      }
-    ];
+    this.loading = true;
+    setTimeout(() => {
+      this.systemUserToMachineUserService.collection.getAll()
+        .subscribe(
+          (machineUsers) => {
+            this.machines = machineUsers;
+          });
+
+      this.loading = false;
+    });
   }
 
   onClick(event: any) {
-    event.changeValues = this.machines[0].changeValues;
+    this.commandHistoryService.collection.getListById(event.id)
+      .subscribe(
+        (history) => {
+          event.changeValues = history;
+        });
   }
 
   editMachine(machine: any) {
@@ -51,17 +58,16 @@ export class UserMachineTableComponent {
       maximizable: true
     });
 
-    // this.ref.onClose.subscribe((application: BaseApplication) => {
-    //   if (application && application.id) {
-    //     this.baseApplicationService.collection.getAll()
-    //       .subscribe(
-    //         (applications) => {
-    //           this.applications = applications;
-    //         });
-
-    //     this.messageService.add({ severity: 'info', summary: 'Список оновлено', detail: application.name });
-    //   }
-    // });
+    this.ref.onClose.subscribe((machine: MachineUserModel) => {
+      if (machine && machine.id) {
+        this.systemUserToMachineUserService.collection.getAll()
+          .subscribe(
+            (machineUsers) => {
+              this.machines = machineUsers;
+            });
+        this.messageService.add({ severity: 'info', summary: 'Список оновлено' });
+      }
+    });
   }
 
 
@@ -85,16 +91,16 @@ export class UserMachineTableComponent {
       maximizable: true
     });
 
-    // this.ref.onClose.subscribe((application: BaseApplication) => {
-    //   if (application && application.id) {
-    //     this.baseApplicationService.collection.getAll()
-    //       .subscribe(
-    //         (applications) => {
-    //           this.applications = applications;
-    //         });
+    this.ref.onClose.subscribe((machine: MachineUserModel) => {
+      if (machine && machine.id) {
+        this.systemUserToMachineUserService.collection.getAll()
+          .subscribe(
+            (machines) => {
+              this.machines = machines;
+            });
 
-    //     this.messageService.add({ severity: 'info', summary: 'Список оновлено', detail: application.name });
-    //   }
-    // });
+        this.messageService.add({ severity: 'info', summary: 'Список оновлено' });
+      }
+    });
   }
 }

@@ -39,6 +39,7 @@ export class HttpService {
   private setHeaders(): HttpHeaders {
     const headersConfig = {
       'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
       Accept: 'application/json',
       Authorization: `Bearer ${this.tokenService.getToken()}`
     };

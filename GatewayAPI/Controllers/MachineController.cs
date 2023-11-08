@@ -1,9 +1,11 @@
 ﻿using GatewayAPI.Core.Interfaces;
 using GatewayAPI.Core.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GatewayAPI.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MachineController : ControllerBase

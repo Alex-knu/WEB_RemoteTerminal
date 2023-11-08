@@ -2,10 +2,10 @@
 {
     public class SystemUserToMachineUserDTO
     {
-        public Guid Id { get; set; }
-        public Guid SystemUserId { get; set; }
+        public Guid? Id { get; set; }
+        public Guid? SystemUserId { get; set; }
         public MachineUserDTO? MachineUser { get; set; }
-        public Guid MachineUserId { get; set; }
+        public Guid? MachineUserId { get; set; }
 
     }
 }

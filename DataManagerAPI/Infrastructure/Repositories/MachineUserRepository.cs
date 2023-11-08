@@ -21,7 +21,7 @@ namespace DataManagerAPI.Infrastructure.Repositories
             await Task.Run(async () =>
             {
                 await Context.MachineUsers.AddAsync(machineUser);
-                Context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             });
             return machineUser;
         }
@@ -36,7 +36,7 @@ namespace DataManagerAPI.Infrastructure.Repositories
             await Task.Run(async () =>
             {
                 Context.MachineUsers.Update(currentMachineUser);
-                Context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             });
             return currentMachineUser;
         }

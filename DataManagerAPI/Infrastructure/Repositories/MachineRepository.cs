@@ -23,7 +23,7 @@ namespace DataManagerAPI.Infrastructure.Repositories
             await Task.Run(async () =>
             {
                 await Context.Machines.AddAsync(machine);
-                Context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             });
             return machine;
         }
@@ -37,7 +37,7 @@ namespace DataManagerAPI.Infrastructure.Repositories
             await Task.Run(async () =>
             {
                 Context.Machines.Update(currentMachine);
-                Context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             });
             return currentMachine;
         }
@@ -50,7 +50,7 @@ namespace DataManagerAPI.Infrastructure.Repositories
                 await Task.Run(async () =>
                 {
                     Context.Machines.Remove(currentMachine);
-                    Context.SaveChangesAsync();
+                    await Context.SaveChangesAsync();
                 });
             }
             return currentMachine;

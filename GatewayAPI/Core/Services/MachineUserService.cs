@@ -1,11 +1,5 @@
-using System.Dynamic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using GatewayAPI.Core.Interfaces;
 using GatewayAPI.Core.Models.DTO;
-using Microsoft.AspNetCore.Mvc;
 
 namespace GatewayAPI.Core.Services
 {

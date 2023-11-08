@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using GatewayAPI.Core.Interfaces;
 using GatewayAPI.Core.Models.DTO;
+using GatewayAPI.Extentions.Extentions;
 
 namespace GatewayAPI.Core.Services
 {
@@ -18,19 +15,27 @@ namespace GatewayAPI.Core.Services
             _routeService = routeService;
         }
 
-        public async Task<SystemUserToMachineUserDTO> Create(SystemUserToMachineUserDTO query)
-        {
-            return await _routeService.PostAsJsonAsync<SystemUserToMachineUserDTO, SystemUserToMachineUserDTO>(_client, "MachineUser", query);
+        public async Task<SystemUserToMachineUserDTO> Create(HttpContext httpContext, MachineUserDTO query)
+        { 
+            var request = new SystemUserToMachineUserDTO()
+            {
+                Id = Guid.NewGuid(),
+                SystemUserId = JwtUtils.GetUserInfo(httpContext).UserId,
+                MachineUser = query,
+                MachineUserId = query.Id
+            };
+
+            return await _routeService.PostAsJsonAsync<SystemUserToMachineUserDTO, SystemUserToMachineUserDTO>(_client, "SystemUserToMachineUser", request);
         }
 
         public async Task<SystemUserToMachineUserDTO> Delete(Guid query)
         {
-            return await _routeService.DeleteAsJsonAsync<SystemUserToMachineUserDTO, Guid>(_client, "MachineUser", query);
+            return await _routeService.DeleteAsJsonAsync<SystemUserToMachineUserDTO, Guid>(_client, "SystemUserToMachineUser", query);
         }
 
-        public async Task<IEnumerable<SystemUserToMachineUserDTO>> GetMachineUsers(Guid query)
+        public async Task<IEnumerable<MachineUserDTO?>> GetMachineUsers(HttpContext httpContext)
         {
-            return await _routeService.GetListByIdAsync<IEnumerable<SystemUserToMachineUserDTO>, Guid>(_client, "MachineUser", query);
+            return (await _routeService.GetListByIdAsync<IEnumerable<SystemUserToMachineUserDTO>, Guid>(_client, "SystemUserToMachineUser", JwtUtils.GetUserInfo(httpContext).UserId)).Select(e => e.MachineUser);
         }
     }
 }
