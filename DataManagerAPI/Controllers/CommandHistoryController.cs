@@ -25,7 +25,7 @@ namespace DataManagerAPI.Controllers
                 return NotFound();
             }
 
-            return new ObjectResult(commandHistory);
+            return new ObjectResult(commandHistory.OrderByDescending(c => c.Time));
         }
 
         [HttpPost]
