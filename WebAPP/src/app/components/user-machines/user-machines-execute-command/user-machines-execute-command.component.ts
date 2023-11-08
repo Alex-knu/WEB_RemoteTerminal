@@ -42,8 +42,8 @@ export class UserMachineExecuteCommandComponent {
 
   execute() {
     this.remoteService.single.create(this.runComman).subscribe(
-      result => {
-        this.result = result;
+      (result)  => {
+        this.result = JSON.parse(JSON.stringify(result)).result;
       },
       error => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: String((error as HttpErrorResponse).error).split('\n')[0] });

@@ -16,7 +16,7 @@ namespace GatewayAPI.Core.Services
             _routeService = routeService;
         }
 
-        public async Task<string> RunCommandAsync(RunCommandDTO query)
+        public async Task<RunCommandResponceDTO> RunCommandAsync(RunCommandDTO query)
         {
             var history = new CommandHistoryDTO()
             {
@@ -28,7 +28,7 @@ namespace GatewayAPI.Core.Services
 
             _routeService.PostAsJsonAsync<CommandHistoryDTO, string>(_dataClient, "CommandHistory", history);
 
-            return await _routeService.PostAsJsonAsync<RunCommandDTO, string>(_client, "connect", query);
+            return new RunCommandResponceDTO(){ Result =  await _routeService.PostAsJsonAsync<RunCommandDTO, string>(_client, "connect", query) };
         }
     }
 }

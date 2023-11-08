@@ -4,6 +4,6 @@ namespace GatewayAPI.Core.Interfaces
 {
     public interface IRemoteService
     {
-        Task<string> RunCommandAsync(RunCommandDTO query);
+        Task<RunCommandResponceDTO> RunCommandAsync(RunCommandDTO query);
     }
 }
