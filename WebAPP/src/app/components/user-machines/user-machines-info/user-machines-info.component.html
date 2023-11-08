@@ -1,24 +1,38 @@
-<div class="card" *ngIf="machine">
+<div class="card" *ngIf="machineUser">
   <div class="p-field">
     <label for="name">Назва</label>
     <div class="p-field">
-      <input type="text" pInputText id="name" [(ngModel)]="machine.name" required autofocus />
-      <small class="p-invalid" *ngIf="submitted && !machine.name">Name is required.</small>
+      <input type="text" pInputText id="name" [(ngModel)]="machineUser.machine.name" required autofocus />
+      <small class="p-invalid" *ngIf="submitted && !machineUser.machine.name">Name is required.</small>
     </div>
   </div>
 
   <div class="p-field">
     <label for="description">Хост</label>
     <div class="p-field">
-      <input id="description" pInputTextarea [(ngModel)]="machine.host" required rows="3"
+      <input id="description" pInputTextarea [(ngModel)]="machineUser.machine.host" required rows="3"
         cols="20"/>
     </div>
   </div>
 
   <div class="p-field">
-    <label for="description">Порт</label>
+    <label for="port">Порт</label>
     <div class="p-field">
-      <p-inputNumber inputId="profit" [(ngModel)]="machine.port"></p-inputNumber>
+      <p-inputNumber id="port" [(ngModel)]="machineUser.machine.port"></p-inputNumber>
+    </div>
+  </div>
+
+  <div class="p-field">
+    <label for="username">Імя користувача</label>
+    <div class="p-field">
+      <input id="username" pInputTextarea [(ngModel)]="machineUser.username" />
+    </div>
+  </div>
+
+  <div class="p-field">
+    <label for="password">Пароль</label>
+    <div class="p-field">
+      <input id="password" pInputTextarea [(ngModel)]="machineUser.password" />
     </div>
   </div>
 

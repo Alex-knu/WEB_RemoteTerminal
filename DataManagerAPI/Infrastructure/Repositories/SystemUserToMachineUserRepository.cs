@@ -1,5 +1,6 @@
 ﻿using DataManagerAPI.Core.Entities;
 using DataManagerAPI.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataManagerAPI.Infrastructure.Repositories
 {
@@ -16,7 +17,7 @@ namespace DataManagerAPI.Infrastructure.Repositories
             await Task.Run(async () =>
             {
                 await Context.SystemUserToMachineUser.AddAsync(systemUserToMachineUser);
-                Context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             });
             return systemUserToMachineUser;
         }
@@ -30,7 +31,7 @@ namespace DataManagerAPI.Infrastructure.Repositories
                 await Task.Run(async () =>
                 {
                     Context.SystemUserToMachineUser.Remove(currentSystemUserToMachineUser);
-                    Context.SaveChangesAsync();
+                    await Context.SaveChangesAsync();
                 });
             }
             return currentSystemUserToMachineUser;
@@ -38,7 +39,11 @@ namespace DataManagerAPI.Infrastructure.Repositories
 
         public async Task<IEnumerable<SystemUserToMachineUser>> GetSystemUserMachineUsersAsync(Guid systemUserGuid)
         {
-            return Context.SystemUserToMachineUser.Where(su => su.SystemUserId == systemUserGuid);
+            return await Context.SystemUserToMachineUser
+                        .Include(t => t.MachineUser)
+                        .ThenInclude(mu => mu.Machine)
+                        .Where(su => su.SystemUserId == systemUserGuid)
+                        .ToListAsync();
         }
     }
 }

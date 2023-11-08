@@ -1,9 +1,11 @@
 ﻿using GatewayAPI.Core.Interfaces;
 using GatewayAPI.Core.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GatewayAPI.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CommandHistoryController : ControllerBase
@@ -15,10 +17,10 @@ namespace GatewayAPI.Controllers
             _commandHistoryService = commandHistoryService;
         }
 
-        [HttpGet("{guid}", Name = "GetMachineUserCommands")]
-        public async Task<IActionResult> GetMachineUserCommands(Guid query)
+        [HttpGet("collection/{guid}", Name = "GetMachineUserCommands")]
+        public async Task<IActionResult> GetMachineUserCommands(Guid guid)
         {
-            return Ok(await _commandHistoryService.GetMachineUserCommands(query));
+            return Ok(await _commandHistoryService.GetMachineUserCommands(guid));
         }
 
         [HttpPost]

@@ -13,17 +13,18 @@ namespace DataManagerAPI.Controllers
         public SystemUserToMachineUserController(ISystemUserToMachineUserRepository systemUserToMachineUserRepository)
         {
             _SystemUserToMachineUserRepository = systemUserToMachineUserRepository;
+            
         }
 
-        [HttpGet("{guid}", Name = "GetMachineUsers")]
+        [HttpGet("collection/{guid}", Name = "GetMachineUsers")]
         public async Task<IActionResult> GetMachineUsers(Guid guid)
         {
             IEnumerable<SystemUserToMachineUser> systemUserToMachineUser = await _SystemUserToMachineUserRepository.GetSystemUserMachineUsersAsync(guid);
 
-            if (systemUserToMachineUser.Count() == 0)
-            {
-                return NotFound();
-            }
+            // if (systemUserToMachineUser.Count() == 0)
+            // {
+            //     return NotFound();
+            // }
 
             /*IEnumerable<Guid> machineUsersGuids = new List<Guid>();
             foreach (var machineUser in systemUserToMachineUser)

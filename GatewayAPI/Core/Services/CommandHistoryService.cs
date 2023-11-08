@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using GatewayAPI.Core.Interfaces;
 using GatewayAPI.Core.Models.DTO;
-using Microsoft.AspNetCore.Mvc;
 
 namespace GatewayAPI.Core.Services
 {
@@ -26,7 +21,7 @@ namespace GatewayAPI.Core.Services
 
         public async Task<IEnumerable<CommandHistoryDTO>> GetMachineUserCommands(Guid query)
         {
-            return await _routeService.GetByIdAsync<IEnumerable<CommandHistoryDTO>, Guid>(_client, "CommandHistory", query);
+            return await _routeService.GetListByIdAsync<IEnumerable<CommandHistoryDTO>, Guid>(_client, "CommandHistory", query);
         }
     }
 }

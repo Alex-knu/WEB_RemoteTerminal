@@ -5,7 +5,8 @@
 
     <ng-template pTemplate="caption">
       <div class="p-d-flex p-ai-center p-jc-between">
-        <button pButton pRipple label="Нова" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+        <button pButton pRipple label="Нова" icon="pi pi-plus" class="p-button-success p-mr-2"
+          (click)="openNew()"></button>
       </div>
     </ng-template>
 
@@ -24,14 +25,12 @@
           <button (click)="onClick(machine)" type="button" pButton pRipple [pRowToggler]="machine" class="p-button-text p-button-rounded
             p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
         </td>
-        <td>{{machine.name}}</td>
-        <td>{{machine.host}}</td>
-        <td>{{machine.port}}</td>
+        <td>{{machine.machine.name}}</td>
+        <td>{{machine.machine.host}}</td>
+        <td>{{machine.machine.port}}</td>
         <td>
           <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
             (click)="editMachine(machine)"></button>
-          <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-            (click)="deleteApplication(application)" *ngIf="isVisible(user)"></button> -->
           <button pButton pRipple icon="pi pi-cog" class="p-button-rounded p-button-help p-mr-2"
             (click)="executeCommand(machine)"></button>
         </td>

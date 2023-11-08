@@ -49,15 +49,15 @@ export class AppMenuComponent implements OnInit {
       },
       {
         label: 'Користувачі',
-        visible: true,
-        //visible: this.isVisible(this.admin),
+        //visible: true,
+        visible: this.isVisible(this.admin),
         items: [
           {
             label: 'Користувачі',
             icon: 'pi pi-fw pi-users',
             routerLink: ['/user/user-table'],
-            visible: true
-            //visible: this.isVisible(this.admin)
+            //visible: true
+            visible: this.isVisible(this.admin)
           }
         ]
       }

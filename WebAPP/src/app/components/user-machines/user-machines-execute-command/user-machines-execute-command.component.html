@@ -2,7 +2,30 @@
   <div class="p-field">
     <label for="description">Команда</label>
     <div class="p-field">
-      <textarea id="description" pInputTextarea [(ngModel)]="command" required rows="1"
+      <textarea id="description" pInputTextarea [(ngModel)]="runComman.command" required rows="1"
+        cols="20"></textarea>
+    </div>
+  </div>
+
+  <div class="p-field">
+    <label for="useSSHKey">SSH Key</label>
+    <div class="p-field">
+      <p-checkbox [(ngModel)]="runComman.useSSHKey" [binary]="true" inputId="binary"></p-checkbox>
+    </div>
+  </div>
+
+  <div class="p-field">
+    <label for="description">Пароль від root</label>
+    <div class="p-field">
+      <textarea id="rootPassword" pInputTextarea [(ngModel)]="runComman.rootPassword" required rows="1"
+        cols="20"></textarea>
+    </div>
+  </div>
+
+  <div class="p-field">
+    <label for="description">Результат</label>
+    <div class="p-field">
+      <textarea id="result" pInputTextarea [disabled]="true" [(ngModel)]="result" required rows="1"
         cols="20"></textarea>
     </div>
   </div>

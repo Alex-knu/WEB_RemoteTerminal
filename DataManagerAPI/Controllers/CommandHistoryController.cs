@@ -15,7 +15,7 @@ namespace DataManagerAPI.Controllers
             _CommandHistoryRepository = commandHistoryRepository;
         }
 
-        [HttpGet("{guid}", Name = "GetMachineUserCommands")]
+        [HttpGet("collection/{guid}", Name = "GetMachineUserCommands")]
         public async Task<IActionResult> GetMachineUserCommands(Guid guid)
         {
             IEnumerable<CommandHistory> commandHistory = await _CommandHistoryRepository.GetCommandHistoryOfMachineUserAsync(guid);

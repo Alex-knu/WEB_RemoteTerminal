@@ -1,9 +1,11 @@
 ﻿using GatewayAPI.Core.Interfaces;
 using GatewayAPI.Core.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GatewayAPI.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class SystemUserToMachineUserController : ControllerBase
@@ -15,16 +17,16 @@ namespace GatewayAPI.Controllers
             _systemUserToMachineUserService = systemUserToMachineUserService;
         }
 
-        [HttpGet("{guid}", Name = "GetMachineUsers")]
-        public async Task<IActionResult> GetMachineUsers(Guid query)
+        [HttpGet("collection", Name = "GetMachineUsers")]
+        public async Task<IActionResult> GetMachineUsers()
         {
-            return Ok(await _systemUserToMachineUserService.GetMachineUsers(query));
+            return Ok(await _systemUserToMachineUserService.GetMachineUsers(HttpContext));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] SystemUserToMachineUserDTO query)
+        public async Task<IActionResult> Create([FromBody] MachineUserDTO query)
         {
-            return Ok(await _systemUserToMachineUserService.Create(query));
+            return Ok(await _systemUserToMachineUserService.Create(HttpContext, query));
         }
 
         [HttpDelete("{guid}")]

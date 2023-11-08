@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
-import { UUID } from 'angular2-uuid';
 import { MessageService } from 'primeng/api';
+import { HttpErrorResponse } from '@angular/common/http';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { MachineUserModel } from 'src/app/shared/models/machineUser.model';
+import { RunCommandModel } from 'src/app/shared/models/runCommandModel.model';
+import { RemoteService } from 'src/app/shared/services/api/remoteService.service';
 
 @Component({
   selector: 'app-user-machines-execute-command',
@@ -10,41 +13,40 @@ import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dy
 })
 
 export class UserMachineExecuteCommandComponent {
-  command: string;
+  submitted: boolean;
+  machineUser: MachineUserModel;
+  runComman = new RunCommandModel;
+  result: string;
   machine: any;
 
   constructor(
+    private remoteService: RemoteService,
     private messageService: MessageService,
     public dialogService: DialogService,
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig) { }
 
   ngOnInit(): void {
+    this.submitted = false;
+
+    if (this.config.data != null) {
+      this.machineUser = this.config.data;
+
+      this.runComman.machineUserId = this.machineUser.id;
+      this.runComman.password = this.machineUser.password;
+      this.runComman.username = this.machineUser.username;
+      this.runComman.host = this.machineUser.machine.host;
+      this.runComman.port = this.machineUser.machine.port;
+    }
   }
 
   execute() {
-
-    if (this.machine.id) {
-      // this.baseApplicationService.single.update(this.application).subscribe(
-      //   application => {
-      //     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Заявку оновлено' });
-      //     this.ref.close(application);
-      //   },
-      //   error => {
-      //     this.messageService.add({ severity: 'error', summary: 'Error', detail: String((error as HttpErrorResponse).error).split('\n')[0] });
-      //   })
-    }
-    else {
-      this.machine.id = UUID.UUID();
-      // this.baseApplicationService.single.create(this.application).subscribe(
-      //   application => {
-      //     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Заявку створено' });
-      //     this.ref.close(application);
-      //   },
-      //   error => {
-      //     this.application.id = null;
-      //     this.messageService.add({ severity: 'error', summary: 'Error', detail: String((error as HttpErrorResponse).error).split('\n')[0] });
-      //   })
-    }
+    this.remoteService.single.create(this.runComman).subscribe(
+      result => {
+        this.result = result;
+      },
+      error => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: String((error as HttpErrorResponse).error).split('\n')[0] });
+      })
   }
 }

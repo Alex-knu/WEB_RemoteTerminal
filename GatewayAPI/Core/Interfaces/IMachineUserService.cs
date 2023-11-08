@@ -1,5 +1,4 @@
 using GatewayAPI.Core.Models.DTO;
-using Microsoft.AspNetCore.Mvc;
 
 namespace GatewayAPI.Core.Interfaces
 {
