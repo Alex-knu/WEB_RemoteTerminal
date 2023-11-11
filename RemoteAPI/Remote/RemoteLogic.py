@@ -62,7 +62,7 @@ def execute_remote_command_pass(hostname: str, port: int, username: str, passwor
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    if root_password is None:
+    if root_password is None or root_password == '':
         ssh.connect(hostname, port, username, password)
     else:
         ssh.connect(hostname, port, "root", root_password)
