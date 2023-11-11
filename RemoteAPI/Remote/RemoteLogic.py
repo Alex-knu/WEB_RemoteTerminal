@@ -29,8 +29,12 @@ def execute_command_ssh(session: paramiko.client.SSHClient, command: str, root_p
     channel.close()
     lines = str(lines)
 
+    print("LINES: ", lines)
     if root_password is not None:
-        answ = re.search(":.*", lines).group(0)[2:-1].replace("\\r", "")
+        sub1 = "b'root"
+        sub2 = "\\r\\n"
+        answ = re.sub(rf'{sub1}|{sub2}', '', lines).replace("'", "").replace("\\r\\n", "")
+        return answ
     else:
         answ = lines[2:-1].replace("\\r", "")
 
@@ -57,7 +61,11 @@ def execute_remote_command_pass(hostname: str, port: int, username: str, passwor
     """
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname, port, username, password)
+
+    if root_password is None or root_password == '':
+        ssh.connect(hostname, port, username, password)
+    else:
+        ssh.connect(hostname, port, "root", root_password)
 
     answ = execute_command_ssh(session=ssh, command=command, root_password=root_password)
     ssh.close()
