@@ -20,4 +20,4 @@ docker-compose -f docker-compose-encrypted.yml up -d
 
 ### Architecture
 
-<img src="arch.jpg" width="350" />
+<img src="arch.jpg" width="450" />
