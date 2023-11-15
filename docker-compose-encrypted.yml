@@ -1,0 +1,104 @@
+version: '3'
+
+networks:
+  netw:
+    driver: bridge
+
+services:
+
+  test_server:
+    image: debian:trixie
+    container_name: test_server
+    networks:
+    - netw
+    command: >
+      bash -c "
+        apt-get update &&
+        apt-get install -y openssh-server &&
+        echo 'root:root' | chpasswd &&
+        sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/g' /etc/ssh/sshd_config &&
+        sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config &&
+        useradd -m admin &&
+        echo "admin:admin" | chpasswd &&
+        mkdir /var/run/sshd &&
+        /usr/sbin/sshd -D 
+      "
+
+  gateway_api:
+    build:
+      context: ./GatewayAPI
+      dockerfile: Dockerfile
+    container_name: gateway_api
+    networks:
+    - netw
+    ports:
+    - "1417:80"
+    depends_on:
+    - remote_api
+
+  remote_api:
+    build:
+      context: ./RemoteAPI
+      dockerfile: Dockerfile
+    container_name: remote_api
+    networks:
+    - netw
+    ports:
+    - "1414:8000"
+
+  identity_api:
+    build:
+      context: ./IdentityAPI
+      dockerfile: Dockerfile
+    container_name: identity_api
+    networks:
+    - netw
+    ports:
+    - "1415:80"
+    depends_on:
+    - mssql_server_idapi
+
+  web_app:
+    build:
+      context: ./WebAPP
+      dockerfile: Dockerfile
+    container_name: web_app
+    networks:
+    - netw
+    ports:
+    - "1418:80"
+    depends_on:
+    - gateway_api
+
+  mssql_server_idapi:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql_server_idapi
+    environment:
+      SA_PASSWORD: "YourPassword1!"
+      #MSSQL_SA_PASSWORD: "YourPassword1!"
+      ACCEPT_EULA: "Y"
+    networks:
+    - netw
+    #ports:
+    #  - "1433:1433"
+
+  data_manager_api:
+    build:
+      context: ./DataManagerAPI
+      dockerfile: Dockerfile
+    container_name: data_manager_api
+    networks:
+    - netw
+    ports:
+    - "1416:80"
+    depends_on:
+    - mssql_server_dataapi
+
+  mssql_server_dataapi:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql_server_dataapi
+    environment:
+      SA_PASSWORD: "YourPassword2!"
+      ACCEPT_EULA: "Y"
+    networks:
+    - netw
